@@ -1,7 +1,6 @@
 import './App.css';
 import Quotes from "./components/Quotes";
 import Header from "./components/Header";
-import ModalPass from "./components/ModalPass";
 
 function App() {
   return (
