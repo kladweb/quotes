@@ -1,5 +1,4 @@
 import { useHttp } from '../hooks/http.hook';
-import { quotesFetching, quotesFetched, quotesFetchingError } from '../redux/quotesSlise';
 
 const useQuotesService = (dispatch) => {
   const {loading, request, error, clearError} = useHttp();
@@ -13,8 +12,6 @@ const useQuotesService = (dispatch) => {
     body.append('n', _apiName);
     const data = await request(_apiBase, 'POST', body);
     return JSON.parse(data.result);
-    // dispatch(quotesFetched({quotes: quotesArray}));
-    // return quotesArray;
   }
 
   const saveQuotes = async (newQuotes) => {

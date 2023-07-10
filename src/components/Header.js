@@ -4,49 +4,63 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 
-
-import NavDropdown from 'react-bootstrap/NavDropdown';
-
 import '../bootstrap/bootstrap.min.css';
 import ModalPass from "./ModalPass";
 import ModalEnterQuote from "./ModalEnterQuote";
+import ModalJson from "./ModalJson";
 
-// <Navbar collapseOnSelect expand="md" fixed="top" bg="info" data-bs-theme="dark">
+function Header({isAdmin, setIsAdmin}) {
 
-function Header() {
-
-    const [allowedAdd, setAllowedAdd] = useState(false);
-    const [showModal, setShowModal] = useState(false);
+    const [showModalPass, setShowModalPass] = useState(false);
     const [showEnterQuote, setShowEnterQuote] = useState(false);
+    const [showModalJson, setShowModalJson] = useState(false);
     const addQuote = () => {
-        if (allowedAdd) {
+        if (isAdmin) {
             setShowEnterQuote(true);
         } else {
-            setShowModal(true);
+            setShowModalPass(true);
         }
     }
 
     return (
         <>
-            <Navbar fixed="top" expand="md" bg="info" data-bs-theme="dark">
+            <Navbar fixed="top" expand="md" bg="info" data-bs-theme="dark" className='z-3'>
                 <Container>
                     <Navbar.Brand href="#home">МУДРЫЕ ЦИТАТЫ</Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
                     <Navbar.Collapse className="justify-content-end" id="responsive-navbar-nav">
                         <Nav className="text-end">
-                            <Nav.Link href="#home">Избранное</Nav.Link>
-                            <Button variant="light" className='text-info' onClick={addQuote}>Добавить цитату</Button>
+                            <Button
+                                variant="link"
+                                className='text-white text-decoration-none'
+                                onClick={() => {
+                                    setShowModalJson(true)
+                                }}
+                            >
+                                Получить JSON
+                            </Button>
+                            <Button
+                                variant="light"
+                                className='text-info'
+                                onClick={addQuote}
+                            >
+                                Добавить цитату
+                            </Button>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
             <ModalPass
-                showModal={showModal}
-                setShowModal={setShowModal}
-                setAllowedAdd={setAllowedAdd}
+                showModalPass={showModalPass}
+                setShowModalPass={setShowModalPass}
+                setAllowedAdd={setIsAdmin}
                 setShowEnterQuote={setShowEnterQuote}
             />
             <ModalEnterQuote showEnterQuote={showEnterQuote} setShowEnterQuote={setShowEnterQuote}/>
+            <ModalJson
+                showModalJson={showModalJson}
+                setShowModalJson={setShowModalJson}
+            />
         </>
     );
 }

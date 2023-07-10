@@ -2,14 +2,14 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-function ModalPass({showModal, setShowModal, setAllowedAdd, setShowEnterQuote}) {
+function ModalPass({showModalPass, setShowModalPass, setAllowedAdd, setShowEnterQuote}) {
 
     let inputPass = '';
     const handleClose = () => {
-        setShowModal(false);
+        setShowModalPass(false);
     }
     const checkForm = () => {
-        setShowModal(false);
+        setShowModalPass(false);
         if (inputPass === '1111') {
             setAllowedAdd(true);
             setShowEnterQuote(true);
@@ -21,7 +21,7 @@ function ModalPass({showModal, setShowModal, setAllowedAdd, setShowEnterQuote}) 
     }
 
     return (
-        <Modal show={showModal} onHide={handleClose}>
+        <Modal show={showModalPass} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>Введите пароль администратора</Modal.Title>
             </Modal.Header>
