@@ -1,15 +1,19 @@
+import {useState} from "react";
+
 import './App.css';
 import Quotes from "./components/Quotes";
 import Header from "./components/Header";
-import ModalPass from "./components/ModalPass";
 
 function App() {
-  return (
-    <div className="App bg-body-secondary pb-5 ">
-      <Header/>
-      <Quotes/>
-    </div>
-  );
+
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    return (
+        <div className="App bg-body-secondary pb-5 ">
+            <Header isAdmin={isAdmin} setIsAdmin={setIsAdmin}/>
+            <Quotes isAdmin={isAdmin}/>
+        </div>
+    );
 }
 
 export default App;
