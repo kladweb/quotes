@@ -29,7 +29,6 @@ const useQuotesService = (dispatch) => {
     body.append('v', JSON.stringify(newQuotes));
     body.append('p', password);
     const result = await request(_apiBase, 'POST', body);
-    // console.log('result', result);
   }
 
   return {loading, error, getQuotes, saveQuotes, clearError};
