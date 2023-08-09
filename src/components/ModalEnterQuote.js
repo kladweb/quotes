@@ -4,18 +4,16 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import { useDispatch } from 'react-redux';
 import { uid } from 'uid';
 
 import { useQuotesChange } from '../services/QuotesChangeService';
+import HintAuthors from './HintAuthors';
 
 function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
-
   const {changeQuotes} = useQuotesChange();
 
-  const dispatch = useDispatch();
-  const [newQuote, setNewQuote] = useState(null);
-  const [author, setAuthor] = useState(null);
+  const [newQuote, setNewQuote] = useState('');
+  const [author, setAuthor] = useState('');
 
   const handleClose = () => {
     setShowEnterQuote(false);
@@ -36,42 +34,49 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
       author: author
     }
     changeQuotes(newQuoteObj, 'add');
+  }
 
+  const onSetAuthor = (e) => {
+    setAuthor(e.target.value);
   }
 
   return (
-      <Modal show={showEnterQuote} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Добавление новой цитаты</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <FloatingLabel controlId="ControlTextarea1" label="Цитата:" className="mb-3">
-              <Form.Control
-                  as="textarea"
-                  placeholder="Цитата:"
-                  style={{height: '10rem'}}
-                  onChange={(e) => setNewQuote(e.target.value)}
-              />
-            </FloatingLabel>
-            <FloatingLabel controlId="ControlTextarea2" label="Автор:">
-              <Form.Control
-                  type="text"
-                  placeholder="Автор:"
-                  onChange={(e) => setAuthor(e.target.value)}
-              />
-            </FloatingLabel>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outline-info" className='bg-white' onClick={handleClose}>
-            Закрыть
-          </Button>
-          <Button type="submit" variant="info" className='text-white' onClick={checkForm}>
-            Сохранить
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <Modal show={showEnterQuote} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Добавление новой цитаты</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form className='formQuotes'>
+          <FloatingLabel controlId="ControlTextarea1" label="Цитата:" className="mb-3">
+            <Form.Control
+              as='textarea'
+              type='input'
+              placeholder="Цитата:"
+              style={{height: '10rem'}}
+              onChange={(e) => setNewQuote(e.target.value)}
+            />
+          </FloatingLabel>
+          <FloatingLabel controlId="ControlTextarea2" label="Автор:">
+            <Form.Control
+              type="text"
+              placeholder="Автор:"
+              onChange={onSetAuthor}
+              className="form-control"
+              list="datalistOptions"
+            />
+            <HintAuthors author={author}/>
+          </FloatingLabel>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="outline-info" className='bg-white' onClick={handleClose}>
+          Закрыть
+        </Button>
+        <Button type="submit" variant="info" className='text-white' onClick={checkForm}>
+          Сохранить
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 
