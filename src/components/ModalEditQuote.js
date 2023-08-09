@@ -4,11 +4,13 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
 import { useQuotesChange } from '../services/QuotesChangeService';
+import HintAuthors from './HintAuthors';
 
 function ModalEditQuote({quote, showModalEdit, setShowModalEdit}) {
 
   const {changeQuotes} = useQuotesChange();
   const [newQuote, setNewQuote] = useState(quote.quote);
+
   const [author, setAuthor] = useState(quote.author);
   const [doChange, setDoChange] = useState(false);
 
@@ -48,12 +50,14 @@ function ModalEditQuote({quote, showModalEdit, setShowModalEdit}) {
             <Form.Label className='mt-2 fst-italic'>Автор:</Form.Label>
             <Form.Control
                 type="text"
+                list="datalistOptions"
                 defaultValue={quote.author}
                 onChange={(e) => {
                   setAuthor(e.target.value);
                   setDoChange(true);
                 }}
             />
+            <HintAuthors author={author}/>
           </Form>
         </Modal.Body>
         <Modal.Footer>
