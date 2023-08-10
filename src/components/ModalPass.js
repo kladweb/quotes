@@ -2,7 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-function ModalPass({showModalPass, setShowModalPass, setAllowedAdd, setShowEnterQuote}) {
+function ModalPass({showModalPass, setShowModalPass, setAllowedAdd, setShowEnterQuote, setShowAlert}) {
 
   let inputAdmin = '';
   const handleClose = () => {
@@ -13,6 +13,11 @@ function ModalPass({showModalPass, setShowModalPass, setAllowedAdd, setShowEnter
     if (inputAdmin === 'Quotesforme') {
       setAllowedAdd(true);
       setShowEnterQuote(true);
+    } else {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 2000);
     }
   }
 
@@ -21,26 +26,26 @@ function ModalPass({showModalPass, setShowModalPass, setAllowedAdd, setShowEnter
   }
 
   return (
-      <Modal show={showModalPass} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Введите пароль администратора</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Control type="password" autoFocus onInput={setPass}/>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="outline-info" className='bg-white' onClick={handleClose}>
-            Закрыть
-          </Button>
-          <Button type="submit" variant="info" className='text-white' onClick={checkForm}>
-            Сохранить
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <Modal show={showModalPass} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Введите пароль администратора</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            <Form.Control type="password" autoFocus onInput={setPass}/>
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="outline-info" className='bg-white' onClick={handleClose}>
+          Закрыть
+        </Button>
+        <Button type="submit" variant="info" className='text-white' onClick={checkForm}>
+          Сохранить
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 
