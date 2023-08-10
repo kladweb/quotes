@@ -15,7 +15,7 @@ function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote}) {
   }
 
   return (
-      <Modal show={showModalDelete} onHide={handleClose}>
+      <Modal className='my-5' show={showModalDelete} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title className='fs-5'>Вы действительно хотите удалить цитату ?</Modal.Title>
         </Modal.Header>
