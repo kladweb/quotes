@@ -8,7 +8,7 @@ function ModalPass({showModalPass, setShowModalPass, setAllowedAdd, setShowEnter
   const handleClose = () => {
     setShowModalPass(false);
   }
-  const checkForm = () => {
+  const checkPass = (e) => {
     setShowModalPass(false);
     if (inputAdmin === 'Quotesforme') {
       setAllowedAdd(true);
@@ -32,7 +32,7 @@ function ModalPass({showModalPass, setShowModalPass, setAllowedAdd, setShowEnter
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+          <Form.Group className="mb-3">
             <Form.Control type="password" autoFocus onInput={setPass}/>
           </Form.Group>
         </Form>
@@ -41,7 +41,7 @@ function ModalPass({showModalPass, setShowModalPass, setAllowedAdd, setShowEnter
         <Button variant="outline-info" className='bg-white' onClick={handleClose}>
           Закрыть
         </Button>
-        <Button type="submit" variant="info" className='text-white' onClick={checkForm}>
+        <Button variant="info" className='text-white' onClick={checkPass}>
           Сохранить
         </Button>
       </Modal.Footer>

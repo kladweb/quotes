@@ -83,7 +83,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
       </Modal.Header>
       <Modal.Body>
         <Form className='formQuotes' validated={validated} noValidate>
-          <FloatingLabel controlId="ControlTextarea1" label="Цитата:" className="mb-3">
+          <FloatingLabel label="Цитата:" className="mb-3">
             <Form.Control
               required
               value={newQuote}
@@ -97,7 +97,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
               }}
             />
           </FloatingLabel>
-          <FloatingLabel controlId="ControlTextarea2" label="Автор:">
+          <FloatingLabel label="Автор:">
             <Form.Control
               required
               value={author}
@@ -115,7 +115,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
         <Button variant="outline-info" className='bg-white' onClick={handleClose}>
           Закрыть
         </Button>
-        <Button type="submit" variant="info" className='text-white' onClick={checkForm}>
+        <Button variant="info" className='text-white' onClick={checkForm}>
           Сохранить
         </Button>
       </Modal.Footer>
