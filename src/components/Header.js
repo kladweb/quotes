@@ -30,7 +30,7 @@ function Header({isAdmin, setIsAdmin}) {
     <>
       <Navbar fixed="top" expand="md" bg="info" data-bs-theme="dark" className='z-2'>
         <Container>
-          <Navbar.Brand href="#home">МУДРЫЕ ЦИТАТЫ</Navbar.Brand>
+          <Navbar.Brand href="#">МУДРЫЕ ЦИТАТЫ</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
           <Navbar.Collapse className="justify-content-end" id="responsive-navbar-nav">
             <Nav className="text-end">
@@ -42,6 +42,13 @@ function Header({isAdmin, setIsAdmin}) {
                 }}
               >
                 Получить JSON
+              </Button>
+              <Button
+                variant="link"
+                className='text-white text-decoration-none'
+                onClick={addQuote}
+              >
+                LOG IN
               </Button>
               <Button
                 variant="light"
