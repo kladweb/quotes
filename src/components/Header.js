@@ -10,7 +10,10 @@ import ModalPass from './ModalPass';
 import ModalEnterQuote from './ModalEnterQuote';
 import ModalJson from './ModalJson';
 
+import authGoogle from '../firebase/auth';
+
 import './header.scss';
+import { LinkContainer } from 'react-router-bootstrap';
 
 function Header({isAdmin, setIsAdmin}) {
 
@@ -18,6 +21,7 @@ function Header({isAdmin, setIsAdmin}) {
   const [showEnterQuote, setShowEnterQuote] = useState(false);
   const [showModalJson, setShowModalJson] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+
   const addQuote = () => {
     if (isAdmin) {
       setShowEnterQuote(true);
@@ -30,23 +34,28 @@ function Header({isAdmin, setIsAdmin}) {
     <>
       <Navbar fixed="top" expand="md" bg="info" data-bs-theme="dark" className='z-2'>
         <Container>
-          <Navbar.Brand href="#">МУДРЫЕ ЦИТАТЫ</Navbar.Brand>
+          <LinkContainer to={'/'}>
+            <Navbar.Brand>
+              МУДРЫЕ ЦИТАТЫ
+            </Navbar.Brand>
+          </LinkContainer>
+          {/*<NavLink to={`/`} key={0}>МУДРЫЕ ЦИТАТЫ</NavLink>*/}
           <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
           <Navbar.Collapse className="justify-content-end" id="responsive-navbar-nav">
             <Nav className="text-end">
+              {/*<Button*/}
+              {/*  variant="link"*/}
+              {/*  className='text-white text-decoration-none'*/}
+              {/*  onClick={() => {*/}
+              {/*    setShowModalJson(true)*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  Получить JSON*/}
+              {/*</Button>*/}
               <Button
                 variant="link"
                 className='text-white text-decoration-none'
-                onClick={() => {
-                  setShowModalJson(true)
-                }}
-              >
-                Получить JSON
-              </Button>
-              <Button
-                variant="link"
-                className='text-white text-decoration-none'
-                onClick={addQuote}
+                onClick={authGoogle}
               >
                 LOG IN
               </Button>

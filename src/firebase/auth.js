@@ -1,26 +1,20 @@
-import { useEffect, useState } from 'react';
-import { getAuth, signInWithPopup } from 'firebase/auth';
-import { app, googleAuthProvider } from './firebase';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
+function authGoogle() {
 
-export const AuthProvider = () => {
-  const auth = getAuth(app);
-  const [user, setUser] = useState(auth.currentUser);
-
-  useEffect(() => {
-    const unsub = auth.onAuthStateChanged((maybeUser) => {
-      if (maybeUser != null) {
-        return setUser(maybeUser);
-      }
-
-      signInWithPopup(auth, googleAuthProvider)
-        .then((credentials) => setUser(credentials.user))
-        .catch((e) => {
-          console.error(e)
-        });
-    });
-    return unsub;
-  }, [auth]);
-
-  return user != null ? <>{user.displayName}</> : <>loading</>;
+  const providerAuth = new GoogleAuthProvider();
+  const auth = getAuth();
+  signInWithPopup(auth, providerAuth)
+    .then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      const user = result.user;
+    }).catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    const email = error.customData.email;
+    const credential = GoogleAuthProvider.credentialFromError(error);
+  });
 }
+
+export default authGoogle;
