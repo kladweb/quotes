@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { LinkContainer } from 'react-router-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -13,7 +14,6 @@ import ModalJson from './ModalJson';
 import authGoogle from '../firebase/auth';
 
 import './header.scss';
-import { LinkContainer } from 'react-router-bootstrap';
 
 function Header({isAdmin, setIsAdmin}) {
 
@@ -39,19 +39,27 @@ function Header({isAdmin, setIsAdmin}) {
               МУДРЫЕ ЦИТАТЫ
             </Navbar.Brand>
           </LinkContainer>
-          {/*<NavLink to={`/`} key={0}>МУДРЫЕ ЦИТАТЫ</NavLink>*/}
           <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
-          <Navbar.Collapse className="justify-content-end" id="responsive-navbar-nav">
+          <Navbar.Collapse className="justify-content-end-xs" id="responsive-navbar-nav">
             <Nav className="text-end">
-              {/*<Button*/}
-              {/*  variant="link"*/}
-              {/*  className='text-white text-decoration-none'*/}
-              {/*  onClick={() => {*/}
-              {/*    setShowModalJson(true)*/}
-              {/*  }}*/}
-              {/*>*/}
-              {/*  Получить JSON*/}
-              {/*</Button>*/}
+
+              <Nav.Link variant="link" href="/home">Active</Nav.Link>
+
+              <Nav.Item variant="link">
+                <Nav.Link eventKey="link-1">Link</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="link-2">Link</Nav.Link>
+              </Nav.Item>
+              <Button
+                variant="link"
+                className='text-white text-decoration-none'
+                onClick={() => {
+                  setShowModalJson(true)
+                }}
+              >
+                Получить JSON
+              </Button>
               <Button
                 variant="link"
                 className='text-white text-decoration-none'
@@ -70,27 +78,6 @@ function Header({isAdmin, setIsAdmin}) {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <ModalPass
-        showModalPass={showModalPass}
-        setShowModalPass={setShowModalPass}
-        setAllowedAdd={setIsAdmin}
-        setShowEnterQuote={setShowEnterQuote}
-        setShowAlert={setShowAlert}
-      />
-      <ModalEnterQuote showEnterQuote={showEnterQuote} setShowEnterQuote={setShowEnterQuote}/>
-      <ModalJson
-        showModalJson={showModalJson}
-        setShowModalJson={setShowModalJson}
-      />
-      {
-        (showAlert) &&
-        <Alert
-          className='alert-pass position-fixed z-3 m-auto lh-1 top-50 start-50 translate-middle shadow'
-          variant='danger'
-        >
-          Пароль неверный !
-        </Alert>
-      }
     </>
   );
 }
