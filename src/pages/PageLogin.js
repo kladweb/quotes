@@ -1,19 +1,17 @@
 import { useState } from 'react';
 
 import Header from '../components/Header';
-import Quotes from '../components/Quotes';
+import Login from '../components/Login';
 
 
-function PageMain() {
-
-  const [isAdmin, setIsAdmin] = useState(false);
+function PageLogin() {
 
   return (
     <div className="App bg-body-secondary pb-5 ">
       <Header/>
-      <Quotes isAdmin={isAdmin}/>
+      <Login/>
     </div>
   );
 }
 
-export default PageMain;
+export default PageLogin;

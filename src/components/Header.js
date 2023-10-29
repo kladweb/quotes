@@ -15,20 +15,12 @@ import authGoogle from '../firebase/auth';
 
 import './header.scss';
 
-function Header({isAdmin, setIsAdmin}) {
+function Header() {
 
   const [showModalPass, setShowModalPass] = useState(false);
   const [showEnterQuote, setShowEnterQuote] = useState(false);
   const [showModalJson, setShowModalJson] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-
-  const addQuote = () => {
-    if (isAdmin) {
-      setShowEnterQuote(true);
-    } else {
-      setShowModalPass(true);
-    }
-  }
 
   return (
     <>
@@ -40,40 +32,14 @@ function Header({isAdmin, setIsAdmin}) {
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
-          <Navbar.Collapse className="justify-content-end-xs" id="responsive-navbar-nav">
-            <Nav className="text-end">
-
-              <Nav.Link variant="link" href="/home">Active</Nav.Link>
-
-              <Nav.Item variant="link">
-                <Nav.Link eventKey="link-1">Link</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="link-2">Link</Nav.Link>
-              </Nav.Item>
-              <Button
-                variant="link"
-                className='text-white text-decoration-none'
-                onClick={() => {
-                  setShowModalJson(true)
-                }}
-              >
-                Получить JSON
-              </Button>
-              <Button
-                variant="link"
-                className='text-white text-decoration-none'
-                onClick={authGoogle}
-              >
-                LOG IN
-              </Button>
-              <Button
-                variant="light"
-                className='text-info'
-                onClick={addQuote}
-              >
-                Добавить цитату
-              </Button>
+          <Navbar.Collapse className="justify-content-end" id="responsive-navbar-nav">
+            <Nav className="text-center">
+              <LinkContainer to={'/myquotes'}>
+                <Nav.Link eventKey="link-2">Избранные цитаты</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to={'/login'}>
+                <Nav.Link eventKey="login">Войти</Nav.Link>
+              </LinkContainer>
             </Nav>
           </Navbar.Collapse>
         </Container>

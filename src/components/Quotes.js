@@ -55,7 +55,7 @@ function Quotes({isAdmin}) {
   return (
       <Container>
         <Row>
-          <Col sm={'auto'} md={10} lg={8} xxl={7} className="m-auto mt-5 pt-5">
+          <Col sm={'auto'} md={10} lg={8} xxl={7} className="m-auto mt-4 pt-2">
             {
               (statusLoad === 'loaded') ? quotesList :
                   <div className="mt-3 text-center">

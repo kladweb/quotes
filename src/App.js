@@ -14,8 +14,6 @@ function App() {
     <div className="App bg-body-secondary pb-5">
       <BrowserRouter>
         <PagesRouter/>
-        {/*<Header isAdmin={isAdmin} setIsAdmin={setIsAdmin}/>*/}
-        {/*<Quotes isAdmin={isAdmin}/>*/}
       </BrowserRouter>
     </div>
   );
