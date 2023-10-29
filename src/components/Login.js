@@ -1,126 +1,63 @@
 import React, { useState } from 'react';
 import { Button, Form, Container } from 'react-bootstrap';
-import { createUserWithEmailAndPassword, getAuth, sendEmailVerification } from "firebase/auth";
-import * as formik from 'formik';
-import * as yup from 'yup';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 
 function Login() {
 
-  const {Formik} = formik;
-  const schema = yup.object().shape({
-    myName: yup.string()
-      .email('Неправильный email!')
-      .required('Обязательное поле!')
-      .matches(/^([a-z0-9_.-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/, 'Неправильный email!'),
-    pass: yup.string().required().min(8, "Минимум 8 символов!"),
-  });
+  const provider = new GoogleAuthProvider();
+  let user = null;
 
-  function authEmail(name, pass) {
+  const loginGoogle = function () {
     const auth = getAuth();
-    console.log(name);
-    console.log(pass);
-    createUserWithEmailAndPassword(auth, name, pass)
-      .then((userCredential) => {
-        // Signed up
-        const user = userCredential.user;
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        user = result.user;
+        console.log('user: ', user);
+        // IdP data available using getAdditionalUserInfo(result)
         // ...
-        console.log(user);
-        sendVerifMail(auth);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
+      }).catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
   }
 
-  function sendVerifMail(auth) {
-    sendEmailVerification(auth.currentUser)
-      .then(() => {
-        // Email verification sent!
-        // ...
-        console.log('Отправлено письмо для подтверждения!');
-      });
+  const logoutGoogle = function () {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      console.log('Sign-out successful', user);
+      // Sign-out successful.
+    }).catch((error) => {
+      console.log('Sign-out error', user);
+      // An error happened.
+    });
   }
-
-  const handleSend = (event, err) => {
-    const form = event.currentTarget;
-    const name = form.parentNode.myName;
-    const pass = form.parentNode.pass;
-    console.log(Object.keys(err).length);
-    if (Object.keys(err).length === 0) {
-      authEmail(name.value, pass.value);
-    } else {
-
-    }
-
-    // console.log(name.value);
-    // console.log(pass.value);
-    // if (form.checkValidity() === false) {
-    //   event.preventDefault();
-    //   event.stopPropagation();
-    // }
-    // setValidated(true);
-    // const formData = new FormData(form);
-    // const name = formData.get('name');
-    // const pass = formData.get('pass');
-
-    // authEmail(name.value, pass.value);
-  };
 
   return (
     <Container>
-      <Formik
-        validationSchema={schema}
-        onSubmit={console.log}
-        initialValues={{
-          myName: '',
-          pass: '',
-        }}
+      <Button
+        variant="light"
+        className='d-block text-info mt-5 fw-bold mx-auto'
+        onClick={loginGoogle}
       >
-        {({handleSubmit, handleChange, values, touched, errors}) => (
-          <Form className="pt-5" noValidate onSubmit={handleSubmit}>
-            <Form.Group className="mb-3 position-relative" controlId="validationFormik101">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                name="myName"
-                type="text"
-                value={values.myName}
-                onChange={handleChange}
-                placeholder="Enter email"
-                isValid={!touched.myName && values.myName}
-                isInvalid={!!errors.myName}
-              />
-              <Form.Control.Feedback type="invalid" tooltip>
-                {errors.myName}
-              </Form.Control.Feedback>
-              <Form.Text className="text-muted">
-                We'll never share your email with anyone else.
-              </Form.Text>
-            </Form.Group>
-            <Form.Group className="mb-3 position-relative" controlId="validationCustomPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                name="pass"
-                type="password"
-                placeholder="Password"
-                value={values.pass}
-                onChange={handleChange}
-                isValid={!touched.pass && values.pass}
-                isInvalid={!!errors.pass}
-              />
-              <Form.Control.Feedback type="invalid" tooltip>
-                {errors.pass}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Button variant="info" className='text-light' type="submit" onClick={(e) => {
-              handleSend(e, errors);
-            }}>
-              Submit
-            </Button>
-          </Form>
-        )}
-      </Formik>
+        Войти при помощи аккаунта GOOGLE
+      </Button>
+      <Button
+        variant="light"
+        className='d-block text-info mt-5 fw-bold mx-auto'
+        onClick={logoutGoogle}
+      >
+        Выйти из аккаунта
+      </Button>
     </Container>
   );
 }
