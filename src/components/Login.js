@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { Button, Form, Container } from 'react-bootstrap';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { auth } from '../firebase/firebase';
 
 function Login() {
+
+  const [currUs, setCurrUs] = useState(null);
 
   const provider = new GoogleAuthProvider();
   let user = null;
 
   const loginGoogle = function () {
-    const auth = getAuth();
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         // The signed-in user info.
-        user = result.user;
-        console.log('user: ', user);
+        setCurrUs(auth.currentUser);
         // IdP data available using getAdditionalUserInfo(result)
         // ...
       }).catch((error) => {
@@ -32,15 +33,18 @@ function Login() {
   }
 
   const logoutGoogle = function () {
-    const auth = getAuth();
     signOut(auth).then(() => {
-      console.log('Sign-out successful', user);
+      // console.log('Sign-out successful', auth.currentUser);
       // Sign-out successful.
+      setCurrUs(auth.currentUser);
     }).catch((error) => {
-      console.log('Sign-out error', user);
+      // console.log('Sign-out error', user);
       // An error happened.
     });
   }
+
+  console.log(currUs);
+  
 
   return (
     <Container>
