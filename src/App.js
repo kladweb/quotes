@@ -1,12 +1,28 @@
-import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { PagesRouter } from './routes/PagesRouter';
 
 import './App.css';
-import Quotes from "./components/Quotes";
-import Header from "./components/Header";
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase/firebase';
+import { setCurrUser } from './redux/currUserSlice';
+
 
 function App() {
+
+  const dispatch = useDispatch();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/auth.user
+      const uid = user.uid;
+      dispatch(setCurrUser({currUser: user}));
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
 
   // const [isAdmin, setIsAdmin] = useState(false);
 

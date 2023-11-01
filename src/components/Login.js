@@ -1,23 +1,31 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Container } from 'react-bootstrap';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase/firebase';
+import { setCurrUser } from '../redux/currUserSlice';
+
 
 function Login() {
-
-  const [currUs, setCurrUs] = useState(null);
+  const dispatch = useDispatch();
+  const currUser = useSelector(state => state.currUser.currUser);
+  console.log('ddd', currUser);
 
   const provider = new GoogleAuthProvider();
-  let user = null;
 
   const loginGoogle = function () {
+
+    // console.log("provider:", provider);
+    // provider.arguments = {};
+
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
+        dispatch(setCurrUser({currUser: auth.currentUser}));
+        // dispatch(setCurrUser(auth.currentUser));
         // The signed-in user info.
-        setCurrUs(auth.currentUser);
         // IdP data available using getAdditionalUserInfo(result)
         // ...
       }).catch((error) => {
@@ -36,32 +44,36 @@ function Login() {
     signOut(auth).then(() => {
       // console.log('Sign-out successful', auth.currentUser);
       // Sign-out successful.
-      setCurrUs(auth.currentUser);
+      dispatch(setCurrUser({currUser: auth.currentUser}));
     }).catch((error) => {
       // console.log('Sign-out error', user);
       // An error happened.
     });
   }
 
-  console.log(currUs);
-  
+  console.log(currUser);
+
 
   return (
-    <Container>
-      <Button
-        variant="light"
-        className='d-block text-info mt-5 fw-bold mx-auto'
-        onClick={loginGoogle}
-      >
-        Войти при помощи аккаунта GOOGLE
-      </Button>
-      <Button
-        variant="light"
-        className='d-block text-info mt-5 fw-bold mx-auto'
-        onClick={logoutGoogle}
-      >
-        Выйти из аккаунта
-      </Button>
+    <Container className='text-center'>
+      {
+        (!currUser) ?
+          <Button
+            variant="light"
+            className='d-inline-block text-info mt-5 fw-bold'
+            onClick={loginGoogle}
+          >
+            Войти при помощи аккаунта GOOGLE
+          </Button>
+          :
+          <Button
+            variant="light"
+            className='d-inline-block text-info mt-5 fw-bold'
+            onClick={logoutGoogle}
+          >
+            Выйти из аккаунта
+          </Button>
+      }
     </Container>
   );
 }

@@ -6,7 +6,8 @@ import '../bootstrap/bootstrap.min.css';
 import QuoteAdminPanel from './QuoteAdminPanel'
 
 const Quote = ({quote, delQuote, editQuote}) => {
-  let isLogin = useSelector(state => state.isLogin.isLogin);
+  // let isLogin = useSelector(state => state.isLogin.isLogin);
+  let isLogin = false;
   return (
     <Card className="m-auto mt-3 cardQuote" border="info">
       {
