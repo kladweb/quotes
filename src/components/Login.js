@@ -2,16 +2,22 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Container } from 'react-bootstrap';
 import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
-import { auth } from '../firebase/firebase';
+import { collection, addDoc, getDocs, query } from "firebase/firestore";
 import { setCurrUser } from '../redux/currUserSlice';
+import { auth, db } from '../firebase/firebase';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 
 function Login() {
   const dispatch = useDispatch();
   const currUser = useSelector(state => state.currUser.currUser);
-  console.log('ddd', currUser);
-
   const provider = new GoogleAuthProvider();
+
+  const dataQuotes = useSelector(state => state.quotes.quotes);
+
+  const [users, loading, error] = useCollectionData(query(
+    collection(db, 'users')
+  ));
 
   const loginGoogle = function () {
 
@@ -23,7 +29,15 @@ function Login() {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        dispatch(setCurrUser({currUser: auth.currentUser}));
+        const getUser = auth.currentUser;
+        // console.log(getUser);
+        const user = {};
+        user.email = getUser.email;
+        user.displayName = getUser.displayName;
+        user.photoURL = getUser.photoURL;
+        user.uid = getUser.uid;
+
+        dispatch(setCurrUser({currUser: user}));
         // dispatch(setCurrUser(auth.currentUser));
         // The signed-in user info.
         // IdP data available using getAdditionalUserInfo(result)
@@ -51,8 +65,17 @@ function Login() {
     });
   }
 
-  console.log(currUser);
-
+  const loadData = async function () {
+    console.log("dataQuotes", dataQuotes);
+    try {
+      for (let i = 0; i < dataQuotes.length; i++) {
+        const docRef = await addDoc(collection(db, "dataQuotes"), dataQuotes[i]);
+        console.log("Document written with ID: ", docRef.id);
+      }
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
 
   return (
     <Container className='text-center'>
@@ -74,6 +97,13 @@ function Login() {
             Выйти из аккаунта
           </Button>
       }
+      <Button
+        variant="light"
+        className='d-inline-block text-info mt-5 fw-bold'
+        onClick={loadData}
+      >
+        Загрузить данные
+      </Button>
     </Container>
   );
 }

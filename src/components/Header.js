@@ -30,6 +30,7 @@ function Header() {
   // const [showEnterQuote, setShowEnterQuote] = useState(false);
   // const [showModalJson, setShowModalJson] = useState(false);
   // const [showAlert, setShowAlert] = useState(false);
+  console.log(srcAvatar);
 
   return (
     <>
@@ -55,7 +56,7 @@ function Header() {
                           className='m-0 p-0 d-inline-block'
                           width={40}
                           height={40}
-                          alt="yyy"
+                          alt="avatar"
                           src={srcAvatar}
                         />
                       </Figure>

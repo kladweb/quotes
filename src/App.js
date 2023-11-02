@@ -11,11 +11,14 @@ import { setCurrUser } from './redux/currUserSlice';
 function App() {
 
   const dispatch = useDispatch();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      const uid = user.uid;
+  onAuthStateChanged(auth, (getUser) => {
+    if (getUser) {
+
+      const user = {};
+      user.email = getUser.email;
+      user.displayName = getUser.displayName;
+      user.photoURL = getUser.photoURL;
+      user.uid = getUser.uid;
       dispatch(setCurrUser({currUser: user}));
       // ...
     } else {
