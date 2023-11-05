@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Form, Container } from 'react-bootstrap';
-import { signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, getDocs, query } from "firebase/firestore";
+import { Button, Container } from 'react-bootstrap';
+import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { setCurrUser } from '../redux/currUserSlice';
-import { auth, db } from '../firebase/firebase';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { auth } from '../firebase/firebase';
+import Spinner from 'react-bootstrap/Spinner';
 
 
 function Login() {
@@ -13,16 +12,7 @@ function Login() {
   const currUser = useSelector(state => state.currUser.currUser);
   const provider = new GoogleAuthProvider();
 
-  const dataQuotes = useSelector(state => state.quotes.quotes);
-
-  const [users, loading, error] = useCollectionData(query(
-    collection(db, 'users')
-  ));
-
   const loginGoogle = function () {
-
-    // console.log("provider:", provider);
-    // provider.arguments = {};
 
     signInWithPopup(auth, provider)
       .then((result) => {
@@ -65,29 +55,22 @@ function Login() {
     });
   }
 
-  const loadData = async function () {
-    console.log("dataQuotes", dataQuotes);
-    try {
-      for (let i = 0; i < dataQuotes.length; i++) {
-        const docRef = await addDoc(collection(db, "dataQuotes"), dataQuotes[i]);
-        console.log("Document written with ID: ", docRef.id);
-      }
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  }
-
   return (
     <Container className='text-center'>
       {
         (!currUser) ?
-          <Button
-            variant="light"
-            className='d-inline-block text-info mt-5 fw-bold'
-            onClick={loginGoogle}
-          >
-            Войти при помощи аккаунта GOOGLE
-          </Button>
+          (currUser === 0) ?
+            <div className="d-inline-block text-info mt-5 fw-bold">
+              <Spinner animation="border" variant="info"/>
+            </div>
+            :
+            <Button
+              variant="light"
+              className='d-inline-block text-info mt-5 fw-bold'
+              onClick={loginGoogle}
+            >
+              Войти при помощи аккаунта GOOGLE
+            </Button>
           :
           <Button
             variant="light"
@@ -97,13 +80,6 @@ function Login() {
             Выйти из аккаунта
           </Button>
       }
-      <Button
-        variant="light"
-        className='d-inline-block text-info mt-5 fw-bold'
-        onClick={loadData}
-      >
-        Загрузить данные
-      </Button>
     </Container>
   );
 }

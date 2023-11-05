@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Figure from 'react-bootstrap/Figure';
+import Image from 'react-bootstrap/Image';
 
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
@@ -14,8 +14,7 @@ import ModalPass from './ModalPass';
 import ModalEnterQuote from './ModalEnterQuote';
 import ModalJson from './ModalJson';
 
-import authGoogle from '../firebase/auth';
-
+import Spinner from 'react-bootstrap/Spinner';
 import './header.scss';
 
 function Header() {
@@ -30,7 +29,6 @@ function Header() {
   // const [showEnterQuote, setShowEnterQuote] = useState(false);
   // const [showModalJson, setShowModalJson] = useState(false);
   // const [showAlert, setShowAlert] = useState(false);
-  console.log(srcAvatar);
 
   return (
     <>
@@ -51,17 +49,14 @@ function Header() {
                 <Nav.Link eventKey="login" className='my-0 mx-2 p-0'>
                   {
                     (currUser) ?
-                      <Figure className='m-0 p-0 d-inline-block'>
-                        <Figure.Image
-                          className='m-0 p-0 d-inline-block'
-                          width={40}
-                          height={40}
-                          alt="avatar"
-                          src={srcAvatar}
-                        />
-                      </Figure>
+                      <Image src={srcAvatar} width={40} height={40} rounded/>
                       :
-                      <div>Войти</div>
+                      (currUser === 0) ?
+                        <div className="mx-1">
+                          <Spinner animation="border" variant="light"/>
+                        </div>
+                        :
+                        <div>Войти</div>
                   }
                 </Nav.Link>
               </LinkContainer>
