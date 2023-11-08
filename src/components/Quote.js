@@ -12,7 +12,7 @@ import QuoteUserPanel from './QuoteUserPanel';
 
 import './quote.scss';
 
-const Quote = ({quote, delQuote, editQuote, isFavQuote}) => {
+const Quote = ({quote, delQuote, editQuote, isFavQuote, countSub}) => {
   let isAdmin = true;
 
   let isLogin = true;
@@ -27,6 +27,7 @@ const Quote = ({quote, delQuote, editQuote, isFavQuote}) => {
             delQuote={delQuote}
             quote={quote}
             isFavQuote={isFavQuote}
+            countSub={countSub}
           />
         </div>
       }

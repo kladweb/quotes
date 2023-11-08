@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -14,23 +15,41 @@ import ModalEditQuote from './ModalEditQuote';
 import ModalDeleteQuote from './ModalDeleteQuote'
 import { useStorage } from '../firebase/storage';
 
-function Quotes() {
+function Quotes({favorite}) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [activeQuote, setActiveQuote] = useState({});
   const statusLoad = useSelector(state => state.quotes.dataLoadStatus);
   const dataQuotes = useSelector(state => state.quotes.quotes);
+  const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
   const currUser = useSelector(state => state.currUser.currUser);
-  const dataIdFavQuotes = useSelector(state => state.quotesIdFav.quotesIdFav);
-  const {IdQuotesFav, loadingFav} = useStorage();
+  const dataQuotesIdFav = useSelector(state => state.quotesIdFav.quotesIdFav);
+
 
   let idCurrUser = null;
+  let dataQuotesUserCurrent = [];
   if (currUser) {
     idCurrUser = currUser.uid;
+    dataQuotesUsers.forEach((quote) => {
+      if (quote.userAdded === idCurrUser) {
+        dataQuotesUserCurrent.push(quote);
+      }
+    });
   }
+  console.log('dataQuotesUserCurrent', dataQuotesUserCurrent);
 
   const {loading, error, getQuotes, saveQuotes} = useQuotesService(dispatch);
+
+
+  const dataQuotesAll = [...dataQuotes, ...dataQuotesUserCurrent];
+  // console.log('dataQuotes', dataQuotes);
+  // console.log('dataQuotesUsers', dataQuotesUsers);
+  // console.log('dataQuotesAll', dataQuotesAll);
+
+  // dataQuotesAll.push(dataQuotes);
+  // dataQuotesAll.push(dataQuotesUsers);
 
   useEffect(() => {
     if (statusLoad !== 'loaded') {
@@ -39,13 +58,7 @@ function Quotes() {
           dispatch(quotesFetched({quotes: data, dataLoadStatus: 'loaded'}));
         });
     }
-  }, [dataQuotes]);
-
-  useEffect(() => {
-    if (!dataIdFavQuotes) {
-      dispatch(setQuotesIdFav({quotesIdFav: IdQuotesFav}));
-    }
-  }, [loading]);
+  }, [dataQuotes, dataQuotesUsers]);
 
   const onDeleteQuote = (quote) => {
     setShowModalDelete(true);
@@ -60,9 +73,8 @@ function Quotes() {
   const isFavQuote = (quote) => {
     let isFav = false;
     const idQuote = quote.id;
-    console.log(dataIdFavQuotes);
-    if (dataIdFavQuotes) {
-      dataIdFavQuotes.forEach((quoteFav) => {
+    if (dataQuotesIdFav) {
+      dataQuotesIdFav.forEach((quoteFav) => {
         if (quoteFav.id === idQuote) {
           if (quoteFav.usersArr && quoteFav.usersArr.includes(idCurrUser)) {
             isFav = true;
@@ -73,14 +85,31 @@ function Quotes() {
     return isFav;
   }
 
-  const quotesList = dataQuotes.map(quote =>
-    <Quote
-      key={quote.id}
-      quote={quote}
-      delQuote={onDeleteQuote}
-      editQuote={onEditQuote}
-      isFavQuote={isFavQuote(quote)}
-    />);
+  const countSub = (quote) => {
+    let count = 0;
+    const idQuote = quote.id;
+    if (dataQuotesIdFav) {
+      dataQuotesIdFav.forEach((quoteFav) => {
+        if (quoteFav.id === idQuote) {
+          count = quoteFav.usersArr.length;
+        }
+      });
+    }
+    return count;
+  }
+
+  const quotesList = dataQuotesAll.map(quote =>
+    (isFavQuote(quote) || !favorite) ?
+      <Quote
+        key={quote.id}
+        quote={quote}
+        delQuote={onDeleteQuote}
+        editQuote={onEditQuote}
+        isFavQuote={isFavQuote(quote)}
+        countSub={countSub(quote)}
+      />
+      :
+      null);
 
   return (
     <Container>

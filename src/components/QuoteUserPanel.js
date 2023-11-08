@@ -1,16 +1,14 @@
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { useStorage } from '../firebase/storage';
 
-import { useSelector } from 'react-redux';
-import { getDocs } from 'firebase/firestore';
-import { useEffect } from 'react';
-
-function QuoteUserPanel({editQuote, delQuote, quote, isFavQuote}) {
+function QuoteUserPanel({quote, isFavQuote, countSub}) {
+  const {addFavQuote, removeFavQuote} = useStorage();
   const currUser = useSelector(state => state.currUser.currUser);
-  // console.log('isFavQuote', isFavQuote);
-  // useEffect(() => {
-  // }, [isFavQuote]);
+  const navigate = useNavigate();
 
   const buttonAdd = <OverlayTrigger
     placement="bottom"
@@ -23,7 +21,12 @@ function QuoteUserPanel({editQuote, delQuote, quote, isFavQuote}) {
       variant="light"
       onClick={() => {
         console.log('Add Fav');
-        // addQuoteFav(quote)
+        if (currUser) {
+          addFavQuote(quote);
+        } else {
+          navigate('/myquotes');
+          return;
+        }
       }}>
       <span className="material-icons align-bottom text-warning m-0 p-0">add</span>
     </Button>
@@ -39,12 +42,26 @@ function QuoteUserPanel({editQuote, delQuote, quote, isFavQuote}) {
       className="my-0 mx-1 p-0 buttRem"
       variant="light"
       onClick={() => {
-        // removeQuoteFav(quote);
+        removeFavQuote(quote);
         console.log('Remove Fav');
       }}>
       <span className="material-icons align-bottom text-success m-0 p-0">done</span>
     </Button>
   </OverlayTrigger>
+
+  const showCount = <> {
+    (countSub) ?
+      <OverlayTrigger
+        placement="bottom"
+        delay={{show: 200, hide: 200}}
+        overlay={<Tooltip id="button-tooltip-count">Количество добавивших</Tooltip>}
+      >
+        <p className='d-inline-block my-0 p-0 align-middle text-secondary count'>{countSub}</p>
+      </OverlayTrigger>
+      :
+      null
+  }
+  </>
 
   return (
     <>
@@ -58,6 +75,7 @@ function QuoteUserPanel({editQuote, delQuote, quote, isFavQuote}) {
             {buttonAdd}
           </>
       }
+      {showCount}
     </>
   );
 }

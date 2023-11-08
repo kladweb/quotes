@@ -17,3 +17,15 @@
 #button-tooltip-rem .tooltip-arrow::before {
   border-bottom-color: #198754;
 }
+
+.count {
+  cursor: default;
+}
+
+#button-tooltip-count .tooltip-inner {
+  background: #6C757D;
+}
+
+#button-tooltip-count .tooltip-arrow::before {
+  border-bottom-color: #6C757D;
+}

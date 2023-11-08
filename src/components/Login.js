@@ -5,12 +5,14 @@ import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { setCurrUser } from '../redux/currUserSlice';
 import { auth } from '../firebase/firebase';
 import Spinner from 'react-bootstrap/Spinner';
-
+import { useStorage } from '../firebase/storage';
 
 function Login() {
   const dispatch = useDispatch();
   const currUser = useSelector(state => state.currUser.currUser);
+  const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
   const provider = new GoogleAuthProvider();
+  const {readQuotesUsers} = useStorage();
 
   const loginGoogle = function () {
 
@@ -28,6 +30,9 @@ function Login() {
         user.uid = getUser.uid;
 
         dispatch(setCurrUser({currUser: user}));
+        if (dataQuotesUsers.length === 0) {
+          readQuotesUsers();
+        }
         // dispatch(setCurrUser(auth.currentUser));
         // The signed-in user info.
         // IdP data available using getAdditionalUserInfo(result)
@@ -46,12 +51,10 @@ function Login() {
 
   const logoutGoogle = function () {
     signOut(auth).then(() => {
-      // console.log('Sign-out successful', auth.currentUser);
-      // Sign-out successful.
+      console.log('Sign-out successful', auth.currentUser);
       dispatch(setCurrUser({currUser: auth.currentUser}));
     }).catch((error) => {
-      // console.log('Sign-out error', user);
-      // An error happened.
+      console.log('Sign-out error', error);
     });
   }
 
@@ -68,6 +71,7 @@ function Login() {
               variant="light"
               className='d-inline-block text-info mt-5 fw-bold'
               onClick={loginGoogle}
+              style={{transform: 'translateY(50px)'}}
             >
               Войти при помощи аккаунта GOOGLE
             </Button>
@@ -76,6 +80,7 @@ function Login() {
             variant="light"
             className='d-inline-block text-info mt-5 fw-bold'
             onClick={logoutGoogle}
+            style={{transform: 'translateY(50px)'}}
           >
             Выйти из аккаунта
           </Button>
