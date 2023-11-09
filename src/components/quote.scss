@@ -1,0 +1,31 @@
+#button-tooltip-add, #button-tooltip-rem {
+  margin-top: 6px;
+}
+
+#button-tooltip-add .tooltip-inner {
+  background: #FFC107;
+}
+
+#button-tooltip-add .tooltip-arrow::before {
+  border-bottom-color: #FFC107;
+}
+
+#button-tooltip-rem .tooltip-inner {
+  background: #198754;
+}
+
+#button-tooltip-rem .tooltip-arrow::before {
+  border-bottom-color: #198754;
+}
+
+.count {
+  cursor: default;
+}
+
+#button-tooltip-count .tooltip-inner {
+  background: #6C757D;
+}
+
+#button-tooltip-count .tooltip-arrow::before {
+  border-bottom-color: #6C757D;
+}
