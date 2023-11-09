@@ -1,35 +1,42 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Image from 'react-bootstrap/Image';
+import Spinner from 'react-bootstrap/Spinner';
 
-import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
+// import Button from 'react-bootstrap/Button';
+// import Alert from 'react-bootstrap/Alert';
 
 import '../bootstrap/bootstrap.min.css';
-import ModalPass from './ModalPass';
-import ModalEnterQuote from './ModalEnterQuote';
-import ModalJson from './ModalJson';
+import { useStorage } from '../firebase/storage';
+// import ModalPass from './ModalPass';
+// import ModalEnterQuote from './ModalEnterQuote';
+// import ModalJson from './ModalJson';
 
-import Spinner from 'react-bootstrap/Spinner';
 import './header.scss';
+import HeaderUser from './HeaderUser';
 
 function Header() {
-  const dispatch = useDispatch();
+  const {initAppData} = useStorage();
   const currUser = useSelector(state => state.currUser.currUser);
   let srcAvatar = null;
   if (currUser) {
     srcAvatar = currUser.photoURL;
   }
 
+  useEffect(() => {
+    initAppData();
+  }, []);
+
   // const [showModalPass, setShowModalPass] = useState(false);
   // const [showEnterQuote, setShowEnterQuote] = useState(false);
   // const [showModalJson, setShowModalJson] = useState(false);
   // const [showAlert, setShowAlert] = useState(false);
 
+  console.log('HEADER');
   return (
     <>
       <Navbar fixed="top" expand="md" bg="info" data-bs-theme="dark" className='z-2'>
@@ -64,6 +71,7 @@ function Header() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <HeaderUser/>
     </>
   );
 }

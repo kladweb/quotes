@@ -51,14 +51,14 @@ function Quotes({favorite}) {
   // dataQuotesAll.push(dataQuotes);
   // dataQuotesAll.push(dataQuotesUsers);
 
-  useEffect(() => {
-    if (statusLoad !== 'loaded') {
-      getQuotes()
-        .then((data) => {
-          dispatch(quotesFetched({quotes: data, dataLoadStatus: 'loaded'}));
-        });
-    }
-  }, [dataQuotes, dataQuotesUsers]);
+  // useEffect(() => {
+  //   if (statusLoad !== 'loaded') {
+  //     getQuotes()
+  //       .then((data) => {
+  //         dispatch(quotesFetched({quotes: data, dataLoadStatus: 'loaded'}));
+  //       });
+  //   }
+  // }, [dataQuotes, dataQuotesUsers]);
 
   const onDeleteQuote = (quote) => {
     setShowModalDelete(true);

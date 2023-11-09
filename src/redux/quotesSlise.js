@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   quotes: [],
-  dataLoadStatus: 'not_loaded', // 0 - not loaded, 1 - is loading, 2 - loaded, 3 - error
+  quotesLoadStatus: 'not_loaded', // 0 - not loaded, 1 - is loading, 2 - loaded, 3 - error
 }
 
 const quotesSlice = createSlice({
