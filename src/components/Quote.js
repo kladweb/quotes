@@ -5,21 +5,21 @@ import QuoteAdminPanel from './QuoteAdminPanel'
 import QuoteUserPanel from './QuoteUserPanel';
 import { useStorage } from '../firebase/storage';
 
-const Quote = ({quote, delQuote, editQuote, isFavQuote, countSub, isAdmPanel, changeParameter}) => {
+const Quote = ({quote, delQuote, editQuote, isFavQuote, countSub, isAdmPanel, changeCurrentQuote}) => {
 
-  const [showAdminPanel, setShowAdminPanel] = useState(false);
+  // const [showAdminPanel, setShowAdminPanel] = useState(false);
+  // let showAdminPanel = false;
   let isAdmin = true;
   let isLogin = true;
   const handlerShowAdminPanel = (e) => {
-    if (showAdminPanel) {
-      changeParameter(null);
+    if (isAdmPanel) {
+      changeCurrentQuote(null);
     } else {
-      changeParameter(quote);
+      changeCurrentQuote(quote);
     }
   }
 
   useEffect(() => {
-    setShowAdminPanel(isAdmPanel);
   }, [isAdmPanel]);
 
   console.log('QUOTE');
@@ -33,7 +33,7 @@ const Quote = ({quote, delQuote, editQuote, isFavQuote, countSub, isAdmPanel, ch
       <div className='z-0 m-1 d-block position-absolute fixed-bottom'>
         {
           (quote.userAdded) ?
-            (showAdminPanel) &&
+            (isAdmPanel) &&
             <QuoteAdminPanel
               editQuote={editQuote}
               delQuote={delQuote}

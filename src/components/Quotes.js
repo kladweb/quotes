@@ -7,7 +7,6 @@ import Spinner from 'react-bootstrap/Spinner';
 import '../bootstrap/bootstrap.min.css';
 
 import Quote from './Quote';
-import useQuotesService from '../services/QuotesLoadSaveService';
 // import { quotesFetching, quotesFetched, quotesFetchingError } from '../redux/quotesSlise';
 // import { setQuotesIdFav } from '../redux/quotesIdFavSlice';
 import ModalEditQuote from './ModalEditQuote';
@@ -22,14 +21,13 @@ function Quotes({favorite}) {
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [activeQuote, setActiveQuote] = useState({});
 
-  const [parameter, setParameter] = useState(false);
+  const [currentQuote, setCurrentQuote] = useState(false);
 
   const statusLoad = useSelector(state => state.quotes.dataLoadStatus);
   const dataQuotes = useSelector(state => state.quotes.quotes);
   const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
   const currUser = useSelector(state => state.currUser.currUser);
   const dataQuotesIdFav = useSelector(state => state.quotesIdFav.quotesIdFav);
-
 
   let idCurrUser = null;
   let dataQuotesUserCurrent = [];
@@ -42,9 +40,6 @@ function Quotes({favorite}) {
     });
   }
   console.log('dataQuotesUserCurrent', dataQuotesUserCurrent);
-
-  const {loading, error, getQuotes, saveQuotes} = useQuotesService(dispatch);
-
 
   const dataQuotesAll = [...dataQuotes, ...dataQuotesUserCurrent];
   // console.log('dataQuotes', dataQuotes);
@@ -101,8 +96,8 @@ function Quotes({favorite}) {
     return count;
   }
 
-  const changeParameter = (quoteWithPanel) => {
-    setParameter(quoteWithPanel);
+  const changeParameter = (currentQuote) => {
+    setCurrentQuote(currentQuote);
   }
 
   const quotesList = dataQuotesAll.map(quote =>
@@ -116,8 +111,8 @@ function Quotes({favorite}) {
         editQuote={onEditQuote}
         isFavQuote={isFavQuote(quote)}
         countSub={countSub(quote)}
-        changeParameter={changeParameter}
-        isAdmPanel={quote === parameter}
+        changeCurrentQuote={changeParameter}
+        isAdmPanel={quote === currentQuote}
       />
       :
       null);
