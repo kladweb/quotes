@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Container } from 'react-bootstrap';
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { setCurrUser } from '../redux/currUserSlice';
+import { setCurrUser } from '../redux/loginUserSlice';
 import { auth } from '../firebase/firebase';
 import Spinner from 'react-bootstrap/Spinner';
 import { useStorage } from '../firebase/storage';
@@ -12,7 +12,7 @@ function Login() {
   const currUser = useSelector(state => state.currUser.currUser);
   const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
   const provider = new GoogleAuthProvider();
-  const {readQuotesUsers} = useStorage();
+  const {loadQuotesUsers, addQuotes} = useStorage();
 
   const loginGoogle = function () {
 
@@ -31,7 +31,7 @@ function Login() {
 
         dispatch(setCurrUser({currUser: user}));
         if (dataQuotesUsers.length === 0) {
-          readQuotesUsers();
+          loadQuotesUsers();
         }
         // dispatch(setCurrUser(auth.currentUser));
         // The signed-in user info.

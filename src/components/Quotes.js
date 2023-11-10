@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -9,18 +8,22 @@ import '../bootstrap/bootstrap.min.css';
 
 import Quote from './Quote';
 import useQuotesService from '../services/QuotesLoadSaveService';
-import { quotesFetching, quotesFetched, quotesFetchingError } from '../redux/quotesSlise';
-import { setQuotesIdFav } from '../redux/quotesIdFavSlice';
+// import { quotesFetching, quotesFetched, quotesFetchingError } from '../redux/quotesSlise';
+// import { setQuotesIdFav } from '../redux/quotesIdFavSlice';
 import ModalEditQuote from './ModalEditQuote';
 import ModalDeleteQuote from './ModalDeleteQuote'
-import { useStorage } from '../firebase/storage';
+// import { useStorage } from '../firebase/storage';
+
+import './quotes.scss';
 
 function Quotes({favorite}) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [activeQuote, setActiveQuote] = useState({});
+
+  const [parameter, setParameter] = useState(false);
+
   const statusLoad = useSelector(state => state.quotes.dataLoadStatus);
   const dataQuotes = useSelector(state => state.quotes.quotes);
   const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
@@ -51,14 +54,14 @@ function Quotes({favorite}) {
   // dataQuotesAll.push(dataQuotes);
   // dataQuotesAll.push(dataQuotesUsers);
 
-  useEffect(() => {
-    if (statusLoad !== 'loaded') {
-      getQuotes()
-        .then((data) => {
-          dispatch(quotesFetched({quotes: data, dataLoadStatus: 'loaded'}));
-        });
-    }
-  }, [dataQuotes, dataQuotesUsers]);
+  // useEffect(() => {
+  //   if (statusLoad !== 'loaded') {
+  //     getQuotes()
+  //       .then((data) => {
+  //         dispatch(quotesFetched({quotes: data, dataLoadStatus: 'loaded'}));
+  //       });
+  //   }
+  // }, [dataQuotes, dataQuotesUsers]);
 
   const onDeleteQuote = (quote) => {
     setShowModalDelete(true);
@@ -98,8 +101,14 @@ function Quotes({favorite}) {
     return count;
   }
 
+  const changeParameter = (quoteWithPanel) => {
+    setParameter(quoteWithPanel);
+  }
+
   const quotesList = dataQuotesAll.map(quote =>
-    (isFavQuote(quote) || !favorite) ?
+    ((isFavQuote(quote) && !quote.userAdded) ||
+      (!favorite && !quote.userAdded) ||
+      (favorite && quote.userAdded)) ?
       <Quote
         key={quote.id}
         quote={quote}
@@ -107,6 +116,8 @@ function Quotes({favorite}) {
         editQuote={onEditQuote}
         isFavQuote={isFavQuote(quote)}
         countSub={countSub(quote)}
+        changeParameter={changeParameter}
+        isAdmPanel={quote === parameter}
       />
       :
       null);

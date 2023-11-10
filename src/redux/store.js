@@ -3,7 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import quotesReducer from './quotesSlise';
 import quotesUsersReducer from './quotesUsersSlice';
 import quotesIdFavReducer from './quotesIdFavSlice';
-import currUserReducer from './currUserSlice';
+import currUserReducer from './loginUserSlice';
 
 const store = configureStore({
   reducer: {

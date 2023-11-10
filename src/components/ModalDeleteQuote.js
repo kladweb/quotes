@@ -1,17 +1,17 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-import { useQuotesChange } from '../services/QuotesChangeService';
+import { useStorage } from '../firebase/storage';
 
 function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote}) {
 
-  const {changeQuotes} = useQuotesChange();
+  const {changeFavQuotes} = useStorage();
   const handleClose = () => {
     setShowModalDelete(false);
   }
   const checkForm = () => {
     setShowModalDelete(false);
-    changeQuotes(quote);
+    changeFavQuotes(quote, 'delete');
   }
 
   return (

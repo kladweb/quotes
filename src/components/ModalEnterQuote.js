@@ -1,25 +1,23 @@
 import React, { useState } from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Alert from 'react-bootstrap/Alert';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { uid } from 'uid';
 
-import { useQuotesChange } from '../services/QuotesChangeService';
 import HintAuthors from './HintAuthors';
 import checkQuote from '../utilites/checkQuote';
-import { useDispatch, useSelector } from 'react-redux';
-import Alert from 'react-bootstrap/Alert';
 import { setQuotesUsers } from '../redux/quotesUsersSlice';
 import { useStorage } from '../firebase/storage';
 
-function ModalEnterQuote({showEnterQuote, setShowEnterQuote, idCurrUser}) {
+function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
 
   const dispatch = useDispatch();
   const dataQuotes = useSelector(state => state.quotes.quotes);
   const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
-  const {changeQuotes} = useQuotesChange();
+  const idCurrUser = useSelector(state => state.currUser.idCurrUser);
   const {updateQuotesUser, addFavQuote} = useStorage();
 
   const [newQuote, setNewQuote] = useState('');
@@ -27,8 +25,6 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, idCurrUser}) {
   const [linkInfo, setLinkInfo] = useState('');
   const [sameQuote, setSameQuote] = useState('');
   const [validated, setValidated] = useState(false);
-
-  console.log('dataQuotesUsers', dataQuotesUsers);
 
   const handleClose = () => {
     setValidated(false);
@@ -135,7 +131,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, idCurrUser}) {
             />
             <HintAuthors author={author}/>
           </FloatingLabel>
-          <FloatingLabel label="Ссылка на источник:">
+          <FloatingLabel label="Ссылка на источник (необязательно):">
             <Form.Control
               value={linkInfo}
               type="text"
