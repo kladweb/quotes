@@ -6,13 +6,10 @@ import Nav from 'react-bootstrap/Nav';
 
 import Quotes from '../components/Quotes';
 import ModalEnterQuote from '../components/ModalEnterQuote';
+import Spinner from 'react-bootstrap/Spinner';
 
 function PageMain() {
   const currUser = useSelector(state => state.currUser.currUser);
-  let idCurrUser = null;
-  if (currUser) {
-    idCurrUser = currUser.uid;
-  }
 
   const [showEnterQuote, setShowEnterQuote] = useState(false);
 
@@ -47,20 +44,32 @@ function PageMain() {
                   <ModalEnterQuote
                     showEnterQuote={showEnterQuote}
                     setShowEnterQuote={setShowEnterQuote}
-                    idCurrUser={idCurrUser}
                   />
                 </Col>
               </Row>
             </Container>
           </div>
           :
-          <LinkContainer to={'/login'}>
-            <Nav.Link className='my-5 py-5 mx-auto text-center text-info ' eventKey="link-2">
-              <p>Сначала нужно залогиниться!</p>
-            </Nav.Link>
-          </LinkContainer>
+          (currUser !== 0) ?
+            <div className='App bg-body-secondary pb-5 text-center'>
+              <Container>
+                <LinkContainer to={'/login'} className='d-inline-block'>
+                  <Nav.Link
+                    className='my-5 mx-auto text-center text-info'
+                    eventKey="link-2"
+                  >
+                    Сначала нужно залогиниться!
+                  </Nav.Link>
+                </LinkContainer>
+              </Container>
+            </div>
+            :
+            <div className="d-inline-block text-info mt-5 fw-bold">
+              <Container>
+                <Spinner animation="border" variant="info"/>
+              </Container>
+            </div>
       }
-      <></>
     </>
   );
 }

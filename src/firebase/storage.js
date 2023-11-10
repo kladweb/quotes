@@ -9,7 +9,10 @@ import { quotesFetched } from '../redux/quotesSlise';
 
 export const useStorage = () => {
   const dispatch = useDispatch();
-
+  const idCurrUser = useSelector(state => state.currUser.idCurrUser);
+  const dataQuotesIdFav = useSelector(state => state.quotesIdFav.quotesIdFav);
+  const dataQuotes = useSelector(state => state.quotes.quotes);
+  const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
 
   const initUser = () => {
     onAuthStateChanged(auth, (getUser) => {
@@ -54,15 +57,43 @@ export const useStorage = () => {
       });
   }
 
-
-  const currUser = useSelector(state => state.currUser.currUser);
-  let idCurrUser = null;
-  if (currUser) {
-    idCurrUser = currUser.uid;
+  const changeFavQuotes = (quote, action) => {
+    const newQuotes = [...dataQuotesUsers];
+    let numActiveQuote = 0;
+    newQuotes.forEach((v, index) => {
+      if (v.id === quote.id) {
+        numActiveQuote = index;
+      }
+    })
+    switch (action) {
+      case 'delete':
+        newQuotes.splice(numActiveQuote, 1);
+        break;
+      case 'edit':
+        newQuotes.splice(numActiveQuote, 1, quote);
+        break;
+      case 'add':
+        newQuotes.push(quote);
+        break;
+    }
+    updateQuotesUser(newQuotes)
+      .then(() => {
+        dispatch(setQuotesUsers({quotesUsers: newQuotes}));
+        console.log('Данные загружены на сервер FIREBASE');
+      })
+      .catch((e) => {
+        console.error("Ошибка загрузки данных: ", e);
+      });
+    // dispatch(quotesFetched({quotes: newQuotes, dataLoadStatus: 'loaded'}));
+    // saveQuotes(newQuotes)
+    //   .then(() => {
+    //     console.log('Successfully saved');
+    //   })
+    //   .catch(() => {
+    //     console.log('Saving error');
+    //   });
   }
-  const dataQuotesIdFav = useSelector(state => state.quotesIdFav.quotesIdFav);
-  const dataQuotes = useSelector(state => state.quotes.quotes);
-  const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
+
 
   const loadIdQuotesFav = async () => {
     const querySnapshot = await getDoc(doc(db, "dataQuotes", "IdsFav"));
@@ -179,6 +210,7 @@ export const useStorage = () => {
   return {
     initUser,
     initAppData,
+    changeFavQuotes,
     loadIdQuotesFav,
     updateQuotesIdFav,
     loadQuotesUsers,

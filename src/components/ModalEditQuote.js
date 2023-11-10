@@ -5,12 +5,13 @@ import Modal from 'react-bootstrap/Modal';
 
 import { useQuotesChange } from '../services/QuotesChangeService';
 import HintAuthors from './HintAuthors';
+import { useStorage } from '../firebase/storage';
 
 function ModalEditQuote({quote, showModalEdit, setShowModalEdit}) {
 
-  const {changeQuotes} = useQuotesChange();
-  const [newQuote, setNewQuote] = useState(quote.quote);
+  const {changeFavQuotes} = useStorage();
 
+  const [newQuote, setNewQuote] = useState(quote.quote);
   const [author, setAuthor] = useState(quote.author);
   const [doChange, setDoChange] = useState(false);
 
@@ -23,10 +24,11 @@ function ModalEditQuote({quote, showModalEdit, setShowModalEdit}) {
     if (newQuote !== '' && author !== '' && doChange) {
       let newQuoteObj = {
         id: quote.id,
+        userAdded: quote.userAdded,
         quote: newQuote,
         author: author
       }
-      changeQuotes(newQuoteObj, 'edit');
+      changeFavQuotes(newQuoteObj, 'edit');
     }
   }
 
