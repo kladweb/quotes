@@ -63,7 +63,7 @@ function Login() {
       {
         (!currUser) ?
           (currUser === 0) ?
-            <div className="d-inline-block text-info mt-5 fw-bold">
+            <div className="App bg-body-secondary text-info mt-5 pt-5 fw-bold">
               <Spinner animation="border" variant="info"/>
             </div>
             :

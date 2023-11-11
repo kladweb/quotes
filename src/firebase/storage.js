@@ -57,6 +57,35 @@ export const useStorage = () => {
       });
   }
 
+  const changeAllQuotes = (quote, action) => {
+    const newQuotes = [...dataQuotes];
+    let numActiveQuote = 0;
+    newQuotes.forEach((v, index) => {
+      if (v.id === quote.id) {
+        numActiveQuote = index;
+      }
+    })
+    switch (action) {
+      case 'delete':
+        newQuotes.splice(numActiveQuote, 1);
+        break;
+      case 'edit':
+        newQuotes.splice(numActiveQuote, 1, quote);
+        break;
+      case 'add':
+        newQuotes.push(quote);
+        break;
+    }
+    updateQuotesAll(newQuotes)
+      .then(() => {
+        dispatch(quotesFetched({quotes: newQuotes, dataLoadStatus: 'loaded'}));
+        console.log('Данные загружены на сервер FIREBASE');
+      })
+      .catch((e) => {
+        console.error("Ошибка загрузки данных: ", e);
+      });
+  }
+
   const changeFavQuotes = (quote, action) => {
     const newQuotes = [...dataQuotesUsers];
     let numActiveQuote = 0;
@@ -84,22 +113,25 @@ export const useStorage = () => {
       .catch((e) => {
         console.error("Ошибка загрузки данных: ", e);
       });
-    // dispatch(quotesFetched({quotes: newQuotes, dataLoadStatus: 'loaded'}));
-    // saveQuotes(newQuotes)
-    //   .then(() => {
-    //     console.log('Successfully saved');
-    //   })
-    //   .catch(() => {
-    //     console.log('Saving error');
-    //   });
   }
-
 
   const loadIdQuotesFav = async () => {
     const querySnapshot = await getDoc(doc(db, "dataQuotes", "IdsFav"));
     const IdQuotesFav = JSON.parse(querySnapshot.data().dataFav);
     // console.log('IdQuotesFav ', IdQuotesFav);
     dispatch(setQuotesIdFav({quotesIdFav: IdQuotesFav}));
+  }
+
+  const updateQuotesAll = async (data) => {
+    const dataQuotesJson = JSON.stringify(data);
+    const objQuotes = {};
+    objQuotes.dataQuotesApp = dataQuotesJson;
+    try {
+      await setDoc(doc(db, "dataQuotes", 'quotesApp'), objQuotes);
+      console.log('Данные загружены на сервер FIREBASE');
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   }
 
   const updateQuotesIdFav = async (data) => {
@@ -142,6 +174,15 @@ export const useStorage = () => {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+  }
+
+  const addQuoteToAll = (quote) => {
+    const newQuotesArr = [...dataQuotes];
+    newQuotesArr.push(quote);
+    updateQuotesAll(newQuotesArr)
+      .then(() => {
+        dispatch(quotesFetched({quotes: newQuotesArr, dataLoadStatus: 'loaded'}));
+      });
   }
 
   const addFavQuote = (quote) => {
@@ -210,6 +251,8 @@ export const useStorage = () => {
   return {
     initUser,
     initAppData,
+    addQuoteToAll,
+    changeAllQuotes,
     changeFavQuotes,
     loadIdQuotesFav,
     updateQuotesIdFav,

@@ -56,7 +56,7 @@ function QuoteUserPanel({quote, isFavQuote, countSub}) {
         delay={{show: 200, hide: 200}}
         overlay={<Tooltip id="button-tooltip-count">Количество добавивших</Tooltip>}
       >
-        <p className='d-inline-block my-0 p-0 align-middle text-secondary count'>{countSub}</p>
+        <p className='d-inline-block my-0 py-0 pe-2 align-middle text-secondary count'>{countSub}</p>
       </OverlayTrigger>
       :
       null

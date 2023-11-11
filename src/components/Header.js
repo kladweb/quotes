@@ -17,10 +17,9 @@ import { useStorage } from '../firebase/storage';
 // import ModalJson from './ModalJson';
 
 import './header.scss';
-import HeaderUser from './HeaderUser';
 
 function Header() {
-  const {initAppData} = useStorage();
+  const {initUser, initAppData} = useStorage();
   const currUser = useSelector(state => state.currUser.currUser);
   let srcAvatar = null;
   if (currUser) {
@@ -28,6 +27,7 @@ function Header() {
   }
 
   useEffect(() => {
+    initUser();
     initAppData();
   }, []);
 
@@ -71,7 +71,6 @@ function Header() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <HeaderUser/>
     </>
   );
 }

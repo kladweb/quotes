@@ -12,13 +12,13 @@ import checkQuote from '../utilites/checkQuote';
 import { setQuotesUsers } from '../redux/quotesUsersSlice';
 import { useStorage } from '../firebase/storage';
 
-function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
+function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
 
   const dispatch = useDispatch();
   const dataQuotes = useSelector(state => state.quotes.quotes);
   const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
   const idCurrUser = useSelector(state => state.currUser.idCurrUser);
-  const {updateQuotesUser, addFavQuote} = useStorage();
+  const {updateQuotesUser, addFavQuote, addQuoteToAll} = useStorage();
 
   const [newQuote, setNewQuote] = useState('');
   const [author, setAuthor] = useState('');
@@ -34,7 +34,11 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
   }
   const checkForm = () => {
     if (newQuote.trim() !== '' && author.trim() !== '') {
-      addQuote();
+      if (favorite) {
+        addQuoteFav();
+      } else {
+        addQuoteAll();
+      }
       setShowEnterQuote(false);
       setNewQuote('');
       setAuthor('');
@@ -44,7 +48,26 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
     }
   }
 
-  function addQuote() {
+  function addQuoteAll() {
+    let newQuoteObj = {
+      id: uid(),
+      quote: ucFirst(newQuote),
+      author: ucFirst(author),
+    }
+    const dataQuotesNew = dataQuotes.map((quote) => {
+      console.log('quote', quote);
+      const newQuote = {};
+      newQuote.id = quote.id;
+      newQuote.quote = quote.quote;
+      newQuote.author = quote.author;
+      return newQuote;
+    });
+    dataQuotesNew.push(newQuoteObj);
+    console.log('dataQuotesNew', dataQuotesNew);
+    addQuoteToAll(newQuoteObj);
+  }
+
+  function addQuoteFav() {
     let newQuoteObj = {
       id: uid(),
       quote: ucFirst(newQuote),
@@ -63,11 +86,12 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
       return newQuote;
     });
     dataQuotesUsersNew.push(newQuoteObj);
-    console.log('dataQuotesUsersNew', dataQuotesUsersNew);
+    console.log('dataQuotesNew', dataQuotesUsersNew);
     addFavQuote(newQuoteObj);
-    dispatch(setQuotesUsers({quotesUsers: dataQuotesUsersNew}));
-    updateQuotesUser(dataQuotesUsersNew);
-    // changeQuotes(newQuoteObj, 'add');
+    updateQuotesUser(dataQuotesUsersNew)
+      .then(() => {
+        dispatch(setQuotesUsers({quotesUsers: dataQuotesUsersNew}));
+      });
   }
 
   const onSetAuthor = (e) => {

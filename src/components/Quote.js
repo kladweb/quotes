@@ -5,13 +5,27 @@ import QuoteAdminPanel from './QuoteAdminPanel'
 import QuoteUserPanel from './QuoteUserPanel';
 import { useStorage } from '../firebase/storage';
 
-const Quote = ({quote, delQuote, editQuote, isFavQuote, countSub, isAdmPanel, changeCurrentQuote}) => {
+const Quote = ({
+                 quote,
+                 delQuote,
+                 editQuote,
+                 isFavQuote,
+                 countSub,
+                 isAdmPanel,
+                 changeCurrentQuote,
+                 isUserAdmin,
+               }) => {
 
   // const [showAdminPanel, setShowAdminPanel] = useState(false);
   // let showAdminPanel = false;
   let isAdmin = true;
   let isLogin = true;
   const handlerShowAdminPanel = (e) => {
+    console.log(isUserAdmin);
+    if (!quote.userAdded && !isUserAdmin) {
+      changeCurrentQuote(null);
+      return;
+    }
     if (isAdmPanel) {
       changeCurrentQuote(null);
     } else {
@@ -22,7 +36,7 @@ const Quote = ({quote, delQuote, editQuote, isFavQuote, countSub, isAdmPanel, ch
   useEffect(() => {
   }, [isAdmPanel]);
 
-  console.log('QUOTE');
+  // console.log('QUOTE');
 
   return (
     <Card
@@ -32,21 +46,22 @@ const Quote = ({quote, delQuote, editQuote, isFavQuote, countSub, isAdmPanel, ch
     >
       <div className='z-0 m-1 d-block position-absolute fixed-bottom'>
         {
-          (quote.userAdded) ?
-            (isAdmPanel) &&
-            <QuoteAdminPanel
-              editQuote={editQuote}
-              delQuote={delQuote}
-              quote={quote}
-            />
-
-            :
-            <QuoteUserPanel
-              quote={quote}
-              isFavQuote={isFavQuote}
-              countSub={countSub}
-            />
+          (!quote.userAdded) &&
+          <QuoteUserPanel
+            quote={quote}
+            isFavQuote={isFavQuote}
+            countSub={countSub}
+          />
         }
+        {
+          (isAdmPanel) &&
+          <QuoteAdminPanel
+            editQuote={editQuote}
+            delQuote={delQuote}
+            quote={quote}
+          />
+        }
+
       </div>
       <Card.Body>
         <Card.Text className="mb-2" style={{textIndent: '2rem'}}>
@@ -64,5 +79,6 @@ export default React.memo(Quote, propsAreEqual);
 
 function propsAreEqual(prevProps, nextProps) {
   return prevProps.isAdmPanel === nextProps.isAdmPanel &&
-    prevProps.quote === nextProps.quote;
+    prevProps.quote === nextProps.quote &&
+    prevProps.countSub === nextProps.countSub;
 }

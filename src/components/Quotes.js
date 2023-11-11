@@ -1,8 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Button, Container, Row, Col } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import '../bootstrap/bootstrap.min.css';
 
@@ -14,6 +12,7 @@ import ModalDeleteQuote from './ModalDeleteQuote'
 // import { useStorage } from '../firebase/storage';
 
 import './quotes.scss';
+import ModalEnterQuote from './ModalEnterQuote';
 
 function Quotes({favorite}) {
   const dispatch = useDispatch();
@@ -29,6 +28,12 @@ function Quotes({favorite}) {
   const currUser = useSelector(state => state.currUser.currUser);
   const dataQuotesIdFav = useSelector(state => state.quotesIdFav.quotesIdFav);
 
+  const [showEnterQuote, setShowEnterQuote] = useState(false);
+
+  const adminId = {
+    userId: process.env.REACT_APP_FIREBASE_ADMIN_ID
+  };
+
   let idCurrUser = null;
   let dataQuotesUserCurrent = [];
   if (currUser) {
@@ -39,7 +44,6 @@ function Quotes({favorite}) {
       }
     });
   }
-  console.log('dataQuotesUserCurrent', dataQuotesUserCurrent);
 
   const dataQuotesAll = [...dataQuotes, ...dataQuotesUserCurrent];
   // console.log('dataQuotes', dataQuotes);
@@ -100,6 +104,11 @@ function Quotes({favorite}) {
     setCurrentQuote(currentQuote);
   }
 
+  const addQuote = () => {
+    setShowEnterQuote(true);
+    console.log('add quote');
+  }
+
   const quotesList = dataQuotesAll.map(quote =>
     ((isFavQuote(quote) && !quote.userAdded) ||
       (!favorite && !quote.userAdded) ||
@@ -113,6 +122,7 @@ function Quotes({favorite}) {
         countSub={countSub(quote)}
         changeCurrentQuote={changeParameter}
         isAdmPanel={quote === currentQuote}
+        isUserAdmin={idCurrUser === adminId.userId}
       />
       :
       null);
@@ -120,10 +130,10 @@ function Quotes({favorite}) {
   return (
     <Container>
       <Row>
-        <Col sm={'auto'} md={10} lg={8} xxl={7} className="m-auto mt-4 pt-2">
+        <Col sm={'auto'} md={10} lg={8} xxl={7} className="m-auto mt-4 pt-1">
           {
             (statusLoad === 'loaded') ? quotesList :
-              <div className="mt-3 text-center">
+              <div className="App bg-body-secondary mt-4 pt-3 text-center">
                 <Spinner animation="border" variant="info"/>
               </div>
           }
@@ -133,6 +143,7 @@ function Quotes({favorite}) {
                 quote={activeQuote}
                 showModalEdit={showModalEdit}
                 setShowModalEdit={setShowModalEdit}
+                changeParameter={changeParameter}
               /> : null
           }
           {
@@ -141,8 +152,25 @@ function Quotes({favorite}) {
                 quote={activeQuote}
                 showModalDelete={showModalDelete}
                 setShowModalDelete={setShowModalDelete}
+                changeParameter={changeParameter}
+                favorite={favorite}
               /> : null
           }
+          {
+            (idCurrUser === adminId.userId || favorite) &&
+            <Button
+              variant="light"
+              className='text-info mx-auto d-block mt-5 w-auto'
+              onClick={addQuote}
+            >
+              Добавить цитату
+            </Button>
+          }
+          <ModalEnterQuote
+            showEnterQuote={showEnterQuote}
+            setShowEnterQuote={setShowEnterQuote}
+            favorite={favorite}
+          />
         </Col>
       </Row>
     </Container>
