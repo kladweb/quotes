@@ -7,7 +7,6 @@ import Header from './components/Header';
 
 function App() {
 
-  console.log('APP');
   return (
       <BrowserRouter>
         <Header/>

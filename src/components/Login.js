@@ -1,11 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Button, Container } from 'react-bootstrap';
+import { Button, Container, Image } from 'react-bootstrap';
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { setCurrUser } from '../redux/loginUserSlice';
 import { auth } from '../firebase/firebase';
 import Spinner from 'react-bootstrap/Spinner';
+import './login.scss';
 
 function Login() {
   const dispatch = useDispatch();
@@ -17,11 +18,9 @@ function Login() {
 
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         const getUser = auth.currentUser;
-        // console.log(getUser);
         const user = {};
         user.email = getUser.email;
         user.displayName = getUser.displayName;
@@ -29,7 +28,7 @@ function Login() {
         user.uid = getUser.uid;
         dispatch(setCurrUser({currUser: user}));
         setTimeout(() => {
-          navigate('/');
+          navigate('/main');
         }, 1500);
 
       }).catch((error) => {
@@ -52,7 +51,6 @@ function Login() {
   // currUser = 0;
 
   return (
-    // <div className="App bg-body-secondary text-info d-flex align-items-center">
     <Container className='text-center'>
       {
         (!currUser) ?
@@ -63,20 +61,23 @@ function Login() {
             :
             <Button
               variant="light"
-              className='d-inline-block text-info mt-4 fw-bold'
+              className='d-inline-block text-info mt-4 fw-bold login-btn'
               onClick={loginGoogle}
               style={{transform: 'translateY(50px)'}}
             >
+              {/*<img src="/img/google_icon.png" alt="google"/>*/}
+              <Image src='/img/google_icon.png' className='me-3'/>
               Войти при помощи аккаунта GOOGLE
             </Button>
           :
           <Button
             variant="light"
-            className='d-inline-block text-info mt-4 fw-bold'
+            className='d-inline-block text-info mt-4 fw-bold login-btn'
             onClick={logoutGoogle}
             style={{transform: 'translateY(50px)'}}
           >
             Выйти из аккаунта
+            <Image src='/img/google_icon.png' className='ms-3'/>
           </Button>
       }
     </Container>

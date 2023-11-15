@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Button, Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 
 import Quotes from '../components/Quotes';
-import ModalEnterQuote from '../components/ModalEnterQuote';
 import Spinner from 'react-bootstrap/Spinner';
 
 function PageMain() {
@@ -13,6 +12,9 @@ function PageMain() {
 
   return (
     <div className="App bg-body-secondary">
+      <Container>
+        <h3 className='mt-5 mb-0 p-0 text-center text-info head-fav'>Избранные цитаты</h3>
+      </Container>
       {
         (currUser) ?
           <>

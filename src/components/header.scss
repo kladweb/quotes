@@ -4,6 +4,16 @@
   animation-delay: 200ms;
 }
 
+.quotes-fav-nav {
+  margin: 0;
+  transition: 0.2s ease-in-out;
+}
+
+.quotes-fav-nav:hover {
+  text-shadow: #FFF 1px 0 10px;;
+  transition: 0.2s ease-in-out;
+}
+
 @keyframes show-pass-info {
   0% {
     opacity: 0;
@@ -19,5 +29,11 @@
   }
   100% {
     opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .quotes-fav-nav {
+    margin: 0.5rem 0;
   }
 }
