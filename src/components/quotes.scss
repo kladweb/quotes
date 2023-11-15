@@ -1,0 +1,65 @@
+#button-tooltip-add, #button-tooltip-rem {
+  margin-top: 6px;
+}
+
+#button-tooltip-add .tooltip-inner {
+  background: #FFC107;
+}
+
+#button-tooltip-add .tooltip-arrow::before {
+  border-bottom-color: #FFC107;
+}
+
+#button-tooltip-rem .tooltip-inner {
+  background: #198754;
+}
+
+#button-tooltip-rem .tooltip-arrow::before {
+  border-bottom-color: #198754;
+}
+
+.count {
+  cursor: default;
+}
+
+#button-tooltip-count .tooltip-inner {
+  background: #6C757D;
+}
+
+#button-tooltip-count .tooltip-arrow::before {
+  border-bottom-color: #6C757D;
+}
+
+.head-fav {
+  transform: translateY(1.5rem);
+}
+
+.add-quote {
+  font-weight: 500;
+}
+
+.buttAdd, .buttRem {
+  font-size: 1rem;
+  height: 1.25rem;
+  line-height: 1rem;
+}
+
+.buttAdd span, .buttRem span {
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .cardQuote {
+    font-size: 1rem;
+  }
+
+  .buttAdd, .buttRem {
+    font-size: 0.8rem;
+    height: 1rem;
+    line-height: 0.8rem;
+  }
+
+  .buttAdd span, .buttRem span {
+    font-size: 0.8rem;
+  }
+}

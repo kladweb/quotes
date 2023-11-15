@@ -1,33 +1,38 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-import { useQuotesChange } from '../services/QuotesChangeService';
+import { useStorage } from '../firebase/storage';
 
-function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote}) {
+function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote, changeParameter, favorite}) {
 
-  const {changeQuotes} = useQuotesChange();
+  const {changeUsersQuotes, changeAllQuotes} = useStorage();
   const handleClose = () => {
+    changeParameter(null);
     setShowModalDelete(false);
   }
   const checkForm = () => {
     setShowModalDelete(false);
-    changeQuotes(quote);
+    if (quote.userAdded) {
+      changeUsersQuotes(quote, 'delete');
+    } else {
+      changeAllQuotes(quote, 'delete');
+    }
   }
 
   return (
-      <Modal className='my-5' show={showModalDelete} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title className='fs-5'>Вы действительно хотите удалить цитату ?</Modal.Title>
-        </Modal.Header>
-        <Modal.Footer>
-          <Button variant="outline-info" className='bg-white' onClick={handleClose}>
-            НЕТ
-          </Button>
-          <Button type="submit" variant="info" className='text-white' onClick={checkForm}>
-            УДАЛИТЬ
-          </Button>
-        </Modal.Footer>
-      </Modal>
+    <Modal className='my-5' show={showModalDelete} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title className='fs-5'>Вы действительно хотите удалить цитату ?</Modal.Title>
+      </Modal.Header>
+      <Modal.Footer>
+        <Button variant="outline-info" className='bg-white' onClick={handleClose}>
+          НЕТ
+        </Button>
+        <Button type="submit" variant="info" className='text-white' onClick={checkForm}>
+          УДАЛИТЬ
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }
 

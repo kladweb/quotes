@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
-
+import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Alert from 'react-bootstrap/Alert';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { uid } from 'uid';
 
-import { useQuotesChange } from '../services/QuotesChangeService';
 import HintAuthors from './HintAuthors';
 import checkQuote from '../utilites/checkQuote';
-import { useSelector } from 'react-redux';
-import Alert from 'react-bootstrap/Alert';
+import { useStorage } from '../firebase/storage';
 
-function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
+function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
 
   const dataQuotes = useSelector(state => state.quotes.quotes);
-  const {changeQuotes} = useQuotesChange();
+  const currUser = useSelector(state => state.currUser.currUser);
+  const idCurrUser = useSelector(state => state.currUser.idCurrUser);
+  const {loadQuotesUsers, addQuoteToAll, changeUsersQuotes} = useStorage();
 
   const [newQuote, setNewQuote] = useState('');
   const [author, setAuthor] = useState('');
+  const [linkInfo, setLinkInfo] = useState('');
   const [sameQuote, setSameQuote] = useState('');
   const [validated, setValidated] = useState(false);
 
@@ -28,24 +30,52 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
     setNewQuote('');
     setAuthor('');
   }
-  const checkForm = (event) => {
+  const checkForm = () => {
     if (newQuote.trim() !== '' && author.trim() !== '') {
-      addQuote();
+      if (favorite) {
+        addQuoteFav();
+      } else {
+        addQuoteAll();
+      }
       setShowEnterQuote(false);
       setNewQuote('');
       setAuthor('');
+      setLinkInfo('');
     } else {
       setValidated(true);
     }
   }
 
-  const addQuote = () => {
+  function addQuoteAll() {
     let newQuoteObj = {
       id: uid(),
       quote: ucFirst(newQuote),
-      author: ucFirst(author)
+      author: ucFirst(author),
     }
-    changeQuotes(newQuoteObj, 'add');
+    const dataQuotesNew = dataQuotes.map((quote) => {
+      const newQuote = {};
+      newQuote.id = quote.id;
+      newQuote.quote = quote.quote;
+      newQuote.author = quote.author;
+      return newQuote;
+    });
+    dataQuotesNew.push(newQuoteObj);
+    addQuoteToAll(newQuoteObj);
+  }
+
+  function addQuoteFav() {
+    let newQuoteObj = {
+      id: uid(),
+      quote: ucFirst(newQuote),
+      author: ucFirst(author),
+      userAdded: idCurrUser,
+      userName: currUser.displayName,
+      linkInfo: (linkInfo) ? linkInfo : 'нет данных об источнике',
+    }
+    loadQuotesUsers()
+      .then((data) => {
+        changeUsersQuotes(newQuoteObj, 'add', data);
+      })
   }
 
   const onSetAuthor = (e) => {
@@ -109,6 +139,18 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
             />
             <HintAuthors author={author}/>
           </FloatingLabel>
+          <FloatingLabel label="Ссылка на источник (необязательно):">
+            <Form.Control
+              value={linkInfo}
+              type="text"
+              placeholder="Ссылка на источник:"
+              onChange={(e) => {
+                setLinkInfo(e.target.value);
+              }}
+              className="my-3"
+              list="datalistOptions"
+            />
+          </FloatingLabel>
         </Form>
       </Modal.Body>
       <Modal.Footer>
@@ -127,8 +169,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote}) {
         </Alert>
       }
     </Modal>
-  )
-    ;
+  );
 }
 
 export default ModalEnterQuote;

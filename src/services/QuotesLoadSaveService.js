@@ -1,6 +1,6 @@
 import { useHttp } from '../hooks/http.hook';
 
-const useQuotesService = (dispatch) => {
+const useQuotesService = () => {
   const {loading, request, error, clearError} = useHttp();
 
   const _apiBase = 'https://fe.it-academy.by/AjaxStringStorage2.php';

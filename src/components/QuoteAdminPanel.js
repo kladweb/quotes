@@ -1,17 +1,26 @@
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
-function QuoteAdminPanel({editQuote, delQuote, quote}) {
+function QuoteAdminPanel({editQuote, delQuote, toAllQuotes, quote, isAdmin}) {
 
   return (
-      <ButtonGroup size="sm" className='z-0 m-1 d-block position-absolute fixed-bottom'>
-        <Button variant="outline-warning" onClick={() => {
-          editQuote(quote)
-        }}>Edit</Button>
-        <Button variant="outline-warning" onClick={() => {
-          delQuote(quote)
-        }}>Delete</Button>
-      </ButtonGroup>
+    <ButtonGroup size="sm" className=''>
+      <Button className="m-0 py-0 px-1" variant="outline-warning" onClick={(e) => {
+        e.stopPropagation();
+        editQuote(quote)
+      }}>Edit</Button>
+      <Button className="m-0 py-0 px-1" variant="outline-warning" onClick={(e) => {
+        e.stopPropagation();
+        delQuote(quote)
+      }}>Delete</Button>
+      {
+        (isAdmin) &&
+        <Button className="m-0 py-0 px-1" variant="outline-warning" onClick={(e) => {
+          e.stopPropagation();
+          toAllQuotes(quote);
+        }}>To All quotes</Button>
+      }
+    </ButtonGroup>
   );
 }
 
