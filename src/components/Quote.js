@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import '../bootstrap/bootstrap.min.css';
 import QuoteAdminPanel from './QuoteAdminPanel'
 import QuoteUserPanel from './QuoteUserPanel';
-import { useStorage } from '../firebase/storage';
 
 const Quote = ({
                  quote,
@@ -18,8 +17,6 @@ const Quote = ({
                  isAdmin
                }) => {
 
-  // const [showAdminPanel, setShowAdminPanel] = useState(false);
-  // let showAdminPanel = false;
   const handlerShowAdminPanel = (e) => {
     console.log(isUserAdmin);
     if (!quote.userAdded && !isUserAdmin) {
@@ -35,8 +32,6 @@ const Quote = ({
 
   useEffect(() => {
   }, [isAdmPanel]);
-
-  // console.log('QUOTE');
 
   return (
     <Card

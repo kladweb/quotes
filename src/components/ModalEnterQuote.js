@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
@@ -9,14 +9,11 @@ import { uid } from 'uid';
 
 import HintAuthors from './HintAuthors';
 import checkQuote from '../utilites/checkQuote';
-import { setQuotesUsers } from '../redux/quotesUsersSlice';
 import { useStorage } from '../firebase/storage';
 
 function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
 
-  const dispatch = useDispatch();
   const dataQuotes = useSelector(state => state.quotes.quotes);
-  const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
   const currUser = useSelector(state => state.currUser.currUser);
   const idCurrUser = useSelector(state => state.currUser.idCurrUser);
   const {loadQuotesUsers, addQuoteToAll, changeUsersQuotes} = useStorage();
@@ -56,7 +53,6 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
       author: ucFirst(author),
     }
     const dataQuotesNew = dataQuotes.map((quote) => {
-      console.log('quote', quote);
       const newQuote = {};
       newQuote.id = quote.id;
       newQuote.quote = quote.quote;
@@ -64,7 +60,6 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
       return newQuote;
     });
     dataQuotesNew.push(newQuoteObj);
-    console.log('dataQuotesNew', dataQuotesNew);
     addQuoteToAll(newQuoteObj);
   }
 
@@ -77,29 +72,10 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
       userName: currUser.displayName,
       linkInfo: (linkInfo) ? linkInfo : 'нет данных об источнике',
     }
-    // const dataQuotesUsersNew = dataQuotesUsers.map((quote) => {
-    //   console.log('quote', quote);
-    //   const newQuote = {};
-    //   newQuote.id = quote.id;
-    //   newQuote.quote = quote.quote;
-    //   newQuote.author = quote.author;
-    //   newQuote.userAdded = quote.userAdded;
-    //   newQuote.userName = quote.userName;
-    //   newQuote.linkInfo = quote.linkInfo;
-    //   return newQuote;
-    // });
-    // dataQuotesUsersNew.push(newQuoteObj);
-    // console.log('dataQuotesNew', dataQuotesUsersNew);
     loadQuotesUsers()
       .then((data) => {
         changeUsersQuotes(newQuoteObj, 'add', data);
       })
-
-    // addFavQuote(newQuoteObj);
-    // updateQuotesUser(dataQuotesUsersNew)
-    //   .then(() => {
-    //     dispatch(setQuotesUsers({quotesUsers: dataQuotesUsersNew}));
-    //   });
   }
 
   const onSetAuthor = (e) => {
@@ -172,7 +148,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
                 setLinkInfo(e.target.value);
               }}
               className="my-3"
-              // list="datalistOptions"
+              list="datalistOptions"
             />
           </FloatingLabel>
         </Form>

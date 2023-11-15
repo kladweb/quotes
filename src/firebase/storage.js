@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { collection, doc, limit, query, setDoc, getDoc, where, getDocs } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, getDocs } from 'firebase/firestore';
 import { setQuotesUsers } from '../redux/quotesUsersSlice';
 import { setQuotesIdFav } from '../redux/quotesIdFavSlice';
 import { auth, db } from './firebase';
@@ -47,15 +47,6 @@ export const useStorage = () => {
 
   const loadQuotesUsers = async () => {
     const querySnapshot = await getDoc(doc(db, "dataQuotes", "quotesUsers"));
-    // const querySnapshotData = querySnapshot.data();
-    // let quotesUsersBase = null;
-    // if (querySnapshotData) {
-    //   quotesUsersBase = querySnapshotData.dataQuotesUsers;
-    // }
-    // let quotesUsers = null;
-    // if (quotesUsersBase) {
-    //   quotesUsers = JSON.parse(quotesUsersBase);
-    // }
     return JSON.parse(querySnapshot.data().dataQuotesUsers);
   }
 
@@ -218,7 +209,6 @@ export const useStorage = () => {
       if (newItem.id === quote.id) {
         if (!newItem.usersArr.includes(idAddedUser)) {
           (newItem.usersArr).push(idAddedUser);
-          // console.log('PUSH');
           addQuote = false;
         }
       }
@@ -230,9 +220,9 @@ export const useStorage = () => {
       newObj.usersArr = [idAddedUser];
       dataQuotesIdFavNew.push(newObj);
     }
+    dispatch(setQuotesIdFav({quotesIdFav: dataQuotesIdFavNew}));
     updateQuotesIdFav(dataQuotesIdFavNew)
       .then(() => {
-        dispatch(setQuotesIdFav({quotesIdFav: dataQuotesIdFavNew}));
       })
       .catch((e) => {
         console.error("Ошибка загрузки данных: ", e);
@@ -267,21 +257,6 @@ export const useStorage = () => {
       });
   }
 
-  // const addQuotes = async () => {
-  //   console.log('dataQuotes', dataQuotes);
-  //   const dataQuotesJson = JSON.stringify(dataQuotes);
-  //   const objDataQuotes = {};
-  //   objDataQuotes.dataQuotesApp = dataQuotesJson;
-  //   try {
-  //     await setDoc(doc(db, "dataQuotes", 'quotesApp'), objDataQuotes);
-  //     console.log('начинает прокатывать');
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // }
-
-
-  // return {addQuote, addQuoteFav, removeQuoteFav, quotesAll, loading, error, IdQuotesFav};
   return {
     initUser,
     initAppData,

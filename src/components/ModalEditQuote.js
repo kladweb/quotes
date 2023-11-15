@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 
-import { useQuotesChange } from '../services/QuotesChangeService';
 import HintAuthors from './HintAuthors';
 import { useStorage } from '../firebase/storage';
 

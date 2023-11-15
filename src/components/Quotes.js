@@ -97,7 +97,6 @@ function Quotes({favorite, isAdmin}) {
 
   const addQuote = () => {
     setShowEnterQuote(true);
-    console.log('add quote');
   }
 
   const quotesList = dataQuotesAll.map(quote =>
@@ -158,7 +157,7 @@ function Quotes({favorite, isAdmin}) {
             (idCurrUser === adminId.userId || favorite) &&
             <Button
               variant="light"
-              className='text-info mx-auto d-block my-5 w-auto'
+              className='text-info mx-auto d-block my-5 w-auto add-quote'
               onClick={addQuote}
             >
               Добавить цитату

@@ -1,10 +1,7 @@
-import Login from '../components/Login';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Quotes from '../components/Quotes';
-import Quote from '../components/Quote';
-
 
 function PageAdminQuotes() {
   const navigate = useNavigate();
@@ -18,7 +15,7 @@ function PageAdminQuotes() {
     // console.log(idCurrUser);
     // console.log(adminId.userId);
     if (currUser !== 0 && idCurrUser !== adminId.userId) {
-      navigate('/');
+      navigate('/main');
     }
   }, [currUser]);
 
