@@ -6,7 +6,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import { useStorage } from '../firebase/storage';
 
 function QuoteUserPanel({quote, isFavQuote, countSub}) {
-  const {addFavQuote, removeFavQuote} = useStorage();
+  const {loadIdQuotesFav, addFavQuote, removeFavQuote} = useStorage();
   const currUser = useSelector(state => state.currUser.currUser);
   const navigate = useNavigate();
 
@@ -19,10 +19,13 @@ function QuoteUserPanel({quote, isFavQuote, countSub}) {
       size="sm"
       className="my-0 mx-1 p-0 buttAdd"
       variant="light"
-      onClick={() => {
-        console.log('Add Fav');
+      onClick={(e) => {
+        e.stopPropagation();
         if (currUser) {
-          addFavQuote(quote);
+          loadIdQuotesFav()
+            .then((data) => {
+              addFavQuote(quote, data);
+            });
         } else {
           navigate('/myquotes');
           return;
@@ -41,9 +44,12 @@ function QuoteUserPanel({quote, isFavQuote, countSub}) {
       size="sm"
       className="my-0 mx-1 p-0 buttRem"
       variant="light"
-      onClick={() => {
-        removeFavQuote(quote);
-        console.log('Remove Fav');
+      onClick={(e) => {
+        e.stopPropagation();
+        loadIdQuotesFav()
+          .then((data) => {
+            removeFavQuote(quote, data);
+          });
       }}>
       <span className="material-icons align-bottom text-success m-0 p-0">done</span>
     </Button>

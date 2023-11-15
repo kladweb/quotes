@@ -1,18 +1,17 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Button, Container } from 'react-bootstrap';
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { setCurrUser } from '../redux/loginUserSlice';
 import { auth } from '../firebase/firebase';
 import Spinner from 'react-bootstrap/Spinner';
-import { useStorage } from '../firebase/storage';
 
 function Login() {
   const dispatch = useDispatch();
-  const currUser = useSelector(state => state.currUser.currUser);
-  const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
+  const navigate = useNavigate();
+  let currUser = useSelector(state => state.currUser.currUser);
   const provider = new GoogleAuthProvider();
-  const {loadQuotesUsers, addQuotes} = useStorage();
 
   const loginGoogle = function () {
 
@@ -28,24 +27,17 @@ function Login() {
         user.displayName = getUser.displayName;
         user.photoURL = getUser.photoURL;
         user.uid = getUser.uid;
-
         dispatch(setCurrUser({currUser: user}));
-        if (dataQuotesUsers.length === 0) {
-          loadQuotesUsers();
-        }
-        // dispatch(setCurrUser(auth.currentUser));
-        // The signed-in user info.
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
+        setTimeout(() => {
+          navigate('/');
+        }, 1500);
+
       }).catch((error) => {
-      // Handle Errors here.
       const errorCode = error.code;
       const errorMessage = error.message;
-      // The email of the user's account used.
       const email = error.customData.email;
-      // The AuthCredential type that was used.
       const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
+      console.log(error);
     });
   }
 
@@ -57,19 +49,21 @@ function Login() {
       console.log('Sign-out error', error);
     });
   }
+  // currUser = 0;
 
   return (
+    // <div className="App bg-body-secondary text-info d-flex align-items-center">
     <Container className='text-center'>
       {
         (!currUser) ?
           (currUser === 0) ?
-            <div className="App bg-body-secondary text-info mt-5 pt-5 fw-bold">
+            <div className='mt-4 pt-5'>
               <Spinner animation="border" variant="info"/>
             </div>
             :
             <Button
               variant="light"
-              className='d-inline-block text-info mt-5 fw-bold'
+              className='d-inline-block text-info mt-4 fw-bold'
               onClick={loginGoogle}
               style={{transform: 'translateY(50px)'}}
             >
@@ -78,7 +72,7 @@ function Login() {
           :
           <Button
             variant="light"
-            className='d-inline-block text-info mt-5 fw-bold'
+            className='d-inline-block text-info mt-4 fw-bold'
             onClick={logoutGoogle}
             style={{transform: 'translateY(50px)'}}
           >

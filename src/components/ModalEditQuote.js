@@ -9,7 +9,7 @@ import { useStorage } from '../firebase/storage';
 
 function ModalEditQuote({quote, showModalEdit, setShowModalEdit, changeParameter, favorite}) {
 
-  const {changeFavQuotes, changeAllQuotes} = useStorage();
+  const {changeUsersQuotes, changeAllQuotes, loadQuotesUsers} = useStorage();
 
   const [newQuote, setNewQuote] = useState(quote.quote);
   const [author, setAuthor] = useState(quote.author);
@@ -39,7 +39,10 @@ function ModalEditQuote({quote, showModalEdit, setShowModalEdit, changeParameter
         }
       }
       if (favorite) {
-        changeFavQuotes(newQuoteObj, 'edit');
+        loadQuotesUsers()
+          .then((data) => {
+            changeUsersQuotes(newQuoteObj, 'edit', data);
+          });
       } else {
         changeAllQuotes(newQuoteObj, 'edit');
       }

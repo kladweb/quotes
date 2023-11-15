@@ -12,17 +12,17 @@ function PageMain() {
   const currUser = useSelector(state => state.currUser.currUser);
 
   return (
-    <>
+    <div className="App bg-body-secondary">
       {
         (currUser) ?
-          <div className="App bg-body-secondary pb-5">
+          <>
             <Quotes
               favorite={true}
             />
             <Container>
               <Row>
-                <Col sm={'auto'} md={10} lg={8} xxl={7} className="m-auto mt-1 pt-4">
-                  <p className='my-3 mx-auto text-center text-secondary'>
+                <Col sm={'auto'} md={10} lg={8} xxl={7} className="mx-auto">
+                  <p className='mx-auto text-center text-secondary'>
                     Вы можете добавить цитату, которой нет в основном списке. После проверки администратором,
                     добавленная Вами цитата может быть внесена в основной список цитат. При этом она останется и в Вашем
                     личном списке. Спасибо!
@@ -30,7 +30,7 @@ function PageMain() {
                 </Col>
               </Row>
             </Container>
-          </div>
+          </>
           :
           (currUser !== 0) ?
             <div className='App bg-body-secondary pb-5 text-center'>
@@ -46,13 +46,13 @@ function PageMain() {
               </Container>
             </div>
             :
-            <div className="App bg-body-secondary pt-4 mt-5 text-center">
-              <Container className='my-4'>
+            <Container className='text-center pt-1 mt-4'>
+              <div className="mt-4 pt-5">
                 <Spinner animation="border" variant="info"/>
-              </Container>
-            </div>
+              </div>
+            </Container>
       }
-    </>
+    </div>
   );
 }
 

@@ -17,8 +17,9 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
   const dispatch = useDispatch();
   const dataQuotes = useSelector(state => state.quotes.quotes);
   const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
+  const currUser = useSelector(state => state.currUser.currUser);
   const idCurrUser = useSelector(state => state.currUser.idCurrUser);
-  const {updateQuotesUser, addFavQuote, addQuoteToAll} = useStorage();
+  const {loadQuotesUsers, addQuoteToAll, changeUsersQuotes} = useStorage();
 
   const [newQuote, setNewQuote] = useState('');
   const [author, setAuthor] = useState('');
@@ -73,25 +74,32 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
       quote: ucFirst(newQuote),
       author: ucFirst(author),
       userAdded: idCurrUser,
+      userName: currUser.displayName,
       linkInfo: (linkInfo) ? linkInfo : 'нет данных об источнике',
     }
-    const dataQuotesUsersNew = dataQuotesUsers.map((quote) => {
-      console.log('quote', quote);
-      const newQuote = {};
-      newQuote.id = quote.id;
-      newQuote.quote = quote.quote;
-      newQuote.author = quote.author;
-      newQuote.linkInfo = quote.linkInfo;
-      newQuote.userAdded = quote.userAdded;
-      return newQuote;
-    });
-    dataQuotesUsersNew.push(newQuoteObj);
-    console.log('dataQuotesNew', dataQuotesUsersNew);
-    addFavQuote(newQuoteObj);
-    updateQuotesUser(dataQuotesUsersNew)
-      .then(() => {
-        dispatch(setQuotesUsers({quotesUsers: dataQuotesUsersNew}));
-      });
+    // const dataQuotesUsersNew = dataQuotesUsers.map((quote) => {
+    //   console.log('quote', quote);
+    //   const newQuote = {};
+    //   newQuote.id = quote.id;
+    //   newQuote.quote = quote.quote;
+    //   newQuote.author = quote.author;
+    //   newQuote.userAdded = quote.userAdded;
+    //   newQuote.userName = quote.userName;
+    //   newQuote.linkInfo = quote.linkInfo;
+    //   return newQuote;
+    // });
+    // dataQuotesUsersNew.push(newQuoteObj);
+    // console.log('dataQuotesNew', dataQuotesUsersNew);
+    loadQuotesUsers()
+      .then((data) => {
+        changeUsersQuotes(newQuoteObj, 'add', data);
+      })
+
+    // addFavQuote(newQuoteObj);
+    // updateQuotesUser(dataQuotesUsersNew)
+    //   .then(() => {
+    //     dispatch(setQuotesUsers({quotesUsers: dataQuotesUsersNew}));
+    //   });
   }
 
   const onSetAuthor = (e) => {
@@ -185,8 +193,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
         </Alert>
       }
     </Modal>
-  )
-    ;
+  );
 }
 
 export default ModalEnterQuote;

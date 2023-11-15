@@ -17,6 +17,7 @@ export const useStorage = () => {
   const initUser = () => {
     onAuthStateChanged(auth, (getUser) => {
       if (getUser) {
+        // console.log(getUser);
         const user = {};
         user.email = getUser.email;
         user.displayName = getUser.displayName;
@@ -37,6 +38,25 @@ export const useStorage = () => {
       dataArr.push(obj);
     });
     return dataArr;
+  }
+
+  const loadIdQuotesFav = async () => {
+    const querySnapshot = await getDoc(doc(db, "dataQuotes", "IdsFav"));
+    return JSON.parse(querySnapshot.data().dataFav);
+  }
+
+  const loadQuotesUsers = async () => {
+    const querySnapshot = await getDoc(doc(db, "dataQuotes", "quotesUsers"));
+    // const querySnapshotData = querySnapshot.data();
+    // let quotesUsersBase = null;
+    // if (querySnapshotData) {
+    //   quotesUsersBase = querySnapshotData.dataQuotesUsers;
+    // }
+    // let quotesUsers = null;
+    // if (quotesUsersBase) {
+    //   quotesUsers = JSON.parse(quotesUsersBase);
+    // }
+    return JSON.parse(querySnapshot.data().dataQuotesUsers);
   }
 
   const initAppData = () => {
@@ -64,7 +84,7 @@ export const useStorage = () => {
       if (v.id === quote.id) {
         numActiveQuote = index;
       }
-    })
+    });
     switch (action) {
       case 'delete':
         newQuotes.splice(numActiveQuote, 1);
@@ -73,30 +93,41 @@ export const useStorage = () => {
         newQuotes.splice(numActiveQuote, 1, quote);
         break;
       case 'add':
-        newQuotes.push(quote);
+        const newQuote = {};
+        newQuote.id = quote.id;
+        newQuote.quote = quote.quote;
+        newQuote.author = quote.author;
+        newQuotes.push(newQuote);
         break;
     }
     updateQuotesAll(newQuotes)
       .then(() => {
         dispatch(quotesFetched({quotes: newQuotes, dataLoadStatus: 'loaded'}));
-        console.log('Данные загружены на сервер FIREBASE');
       })
       .catch((e) => {
         console.error("Ошибка загрузки данных: ", e);
       });
   }
 
-  const changeFavQuotes = (quote, action) => {
-    const newQuotes = [...dataQuotesUsers];
+  const changeUsersQuotes = (quote, action, dataQuotesUsersCurr = dataQuotesUsers) => {
+    const newQuotes = [...dataQuotesUsersCurr];
+    // const newDataQuotesIdFav = [...dataQuotesIdFav];
     let numActiveQuote = 0;
     newQuotes.forEach((v, index) => {
       if (v.id === quote.id) {
         numActiveQuote = index;
       }
-    })
+    });
+    // let numActiveIdFav = 0;
+    // newDataQuotesIdFav.forEach((v, index) => {
+    //   if (v.id === quote.id) {
+    //     numActiveIdFav = index;
+    //   }
+    // });
     switch (action) {
       case 'delete':
         newQuotes.splice(numActiveQuote, 1);
+        // newDataQuotesIdFav.splice(numActiveIdFav, 1);
         break;
       case 'edit':
         newQuotes.splice(numActiveQuote, 1, quote);
@@ -108,18 +139,17 @@ export const useStorage = () => {
     updateQuotesUser(newQuotes)
       .then(() => {
         dispatch(setQuotesUsers({quotesUsers: newQuotes}));
-        console.log('Данные загружены на сервер FIREBASE');
       })
       .catch((e) => {
         console.error("Ошибка загрузки данных: ", e);
       });
-  }
-
-  const loadIdQuotesFav = async () => {
-    const querySnapshot = await getDoc(doc(db, "dataQuotes", "IdsFav"));
-    const IdQuotesFav = JSON.parse(querySnapshot.data().dataFav);
-    // console.log('IdQuotesFav ', IdQuotesFav);
-    dispatch(setQuotesIdFav({quotesIdFav: IdQuotesFav}));
+    // updateQuotesIdFav(newDataQuotesIdFav)
+    //   .then(() => {
+    //     dispatch(setQuotesIdFav({quotesIdFav: newDataQuotesIdFav}));
+    //   })
+    //   .catch((e) => {
+    //     console.error("Ошибка загрузки данных: ", e);
+    //   });
   }
 
   const updateQuotesAll = async (data) => {
@@ -147,23 +177,6 @@ export const useStorage = () => {
     }
   }
 
-  const loadQuotesUsers = async () => {
-    const querySnapshot = await getDoc(doc(db, "dataQuotes", "quotesUsers"));
-    const querySnapshotData = querySnapshot.data();
-    // console.log('1', querySnapshotData);
-    let quotesUsersBase = null;
-    if (querySnapshotData) {
-      quotesUsersBase = querySnapshotData.dataQuotesUsers;
-    }
-    // console.log('2', quotesUsersBase);
-    let quotesUsers = null;
-    if (quotesUsersBase) {
-      quotesUsers = JSON.parse(quotesUsersBase);
-      dispatch(setQuotesUsers({quotesUsers: quotesUsers}));
-    }
-    // console.log(quotesUsers);
-  }
-
   const updateQuotesUser = async (quotesObj) => {
     const quotesObjJson = JSON.stringify(quotesObj);
     const objQuotesUser = {};
@@ -185,36 +198,50 @@ export const useStorage = () => {
       });
   }
 
-  const addFavQuote = (quote) => {
-    let addQuote = false;
-    const dataQuotesIdFavNew = dataQuotesIdFav.map((item) => {
+  const addFavQuote = (quote, dataQuotesIdFavCurrent = dataQuotesIdFav, isAdmin) => {
+    const idAddedUser = (isAdmin) ? quote.userAdded : idCurrUser;
+    let dataQuotesIdFavNew = [];
+    let addQuote = true;
+    dataQuotesIdFavNew = dataQuotesIdFavCurrent.map((item) => {
       const newItem = {};
       newItem.id = item.id;
+      if (item.userAdded) {
+        newItem.userAdded = item.userAdded;
+      }
+      if (item.userName) {
+        newItem.userName = item.userName;
+      }
       newItem.usersArr = [];
       if (item.usersArr) {
         newItem.usersArr = [...item.usersArr];
       }
-      if (newItem.id && newItem.id === quote.id) {
-        if (!newItem.usersArr.includes(idCurrUser)) {
-          newItem.usersArr.push(idCurrUser);
-          console.log('PUSH');
-          addQuote = true;
+      if (newItem.id === quote.id) {
+        if (!newItem.usersArr.includes(idAddedUser)) {
+          (newItem.usersArr).push(idAddedUser);
+          // console.log('PUSH');
+          addQuote = false;
         }
       }
       return newItem;
     });
-    if (!addQuote) {
+    if (addQuote || dataQuotesIdFavNew.length === 0) {
       const newObj = {};
       newObj.id = quote.id;
-      newObj.usersArr = [idCurrUser];
+      newObj.usersArr = [idAddedUser];
       dataQuotesIdFavNew.push(newObj);
     }
-    dispatch(setQuotesIdFav({quotesIdFav: dataQuotesIdFavNew}));
-    updateQuotesIdFav(dataQuotesIdFavNew);
+    updateQuotesIdFav(dataQuotesIdFavNew)
+      .then(() => {
+        dispatch(setQuotesIdFav({quotesIdFav: dataQuotesIdFavNew}));
+      })
+      .catch((e) => {
+        console.error("Ошибка загрузки данных: ", e);
+      });
   }
 
-  const removeFavQuote = (quote) => {
-    const dataQuotesIdFavNew = dataQuotesIdFav.map((item) => {
+  const removeFavQuote = (quote, dataQuotesIdFavCurrent = dataQuotesIdFav) => {
+    const dataQuotesIdFavNew = [];
+    dataQuotesIdFavCurrent.forEach((item) => {
       const newItem = {};
       newItem.id = item.id;
       newItem.usersArr = [];
@@ -227,10 +254,17 @@ export const useStorage = () => {
           newItem.usersArr.splice(i, 1);
         }
       }
-      return newItem;
+      if (newItem.usersArr.length !== 0) {
+        dataQuotesIdFavNew.push(newItem);
+      }
     });
-    dispatch(setQuotesIdFav({quotesIdFav: dataQuotesIdFavNew}));
-    updateQuotesIdFav(dataQuotesIdFavNew);
+    updateQuotesIdFav(dataQuotesIdFavNew)
+      .then(() => {
+        dispatch(setQuotesIdFav({quotesIdFav: dataQuotesIdFavNew}));
+      })
+      .catch((e) => {
+        console.error("Ошибка загрузки данных: ", e);
+      });
   }
 
   // const addQuotes = async () => {
@@ -253,7 +287,7 @@ export const useStorage = () => {
     initAppData,
     addQuoteToAll,
     changeAllQuotes,
-    changeFavQuotes,
+    changeUsersQuotes,
     loadIdQuotesFav,
     updateQuotesIdFav,
     loadQuotesUsers,

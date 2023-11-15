@@ -36,7 +36,7 @@ function Header() {
   // const [showModalJson, setShowModalJson] = useState(false);
   // const [showAlert, setShowAlert] = useState(false);
 
-  console.log('HEADER');
+  // console.log('HEADER');
   return (
     <>
       <Navbar fixed="top" expand="md" bg="info" data-bs-theme="dark" className='z-2'>
