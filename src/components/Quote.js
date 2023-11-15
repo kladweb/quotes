@@ -9,17 +9,17 @@ const Quote = ({
                  quote,
                  delQuote,
                  editQuote,
+                 toAllQuotes,
                  isFavQuote,
                  countSub,
                  isAdmPanel,
                  changeCurrentQuote,
                  isUserAdmin,
+                 isAdmin
                }) => {
 
   // const [showAdminPanel, setShowAdminPanel] = useState(false);
   // let showAdminPanel = false;
-  let isAdmin = true;
-  let isLogin = true;
   const handlerShowAdminPanel = (e) => {
     console.log(isUserAdmin);
     if (!quote.userAdded && !isUserAdmin) {
@@ -40,7 +40,7 @@ const Quote = ({
 
   return (
     <Card
-      className="m-auto mt-3 cardQuote"
+      className="my-3 text-start cardQuote"
       border={(quote.userAdded) ? "warning" : "info"}
       onClick={handlerShowAdminPanel}
     >
@@ -58,7 +58,9 @@ const Quote = ({
           <QuoteAdminPanel
             editQuote={editQuote}
             delQuote={delQuote}
+            toAllQuotes={toAllQuotes}
             quote={quote}
+            isAdmin={isAdmin}
           />
         }
 
@@ -80,5 +82,6 @@ export default React.memo(Quote, propsAreEqual);
 function propsAreEqual(prevProps, nextProps) {
   return prevProps.isAdmPanel === nextProps.isAdmPanel &&
     prevProps.quote === nextProps.quote &&
-    prevProps.countSub === nextProps.countSub;
+    prevProps.countSub === nextProps.countSub &&
+    prevProps.isFavQuote === nextProps.isFavQuote;
 }

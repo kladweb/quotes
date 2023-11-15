@@ -5,15 +5,15 @@ import { useStorage } from '../firebase/storage';
 
 function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote, changeParameter, favorite}) {
 
-  const {changeFavQuotes, changeAllQuotes} = useStorage();
+  const {changeUsersQuotes, changeAllQuotes} = useStorage();
   const handleClose = () => {
     changeParameter(null);
     setShowModalDelete(false);
   }
   const checkForm = () => {
     setShowModalDelete(false);
-    if (favorite) {
-      changeFavQuotes(quote, 'delete');
+    if (quote.userAdded) {
+      changeUsersQuotes(quote, 'delete');
     } else {
       changeAllQuotes(quote, 'delete');
     }
