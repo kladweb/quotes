@@ -26,9 +26,10 @@ function ModalEditQuote({quote, showModalEdit, setShowModalEdit, changeParameter
       if (favorite) {
         newQuoteObj = {
           id: quote.id,
-          userAdded: quote.userAdded,
           quote: newQuote,
-          author: author
+          author: author,
+          userAdded: quote.userAdded,
+          userName: quote.displayName
         }
       } else {
         newQuoteObj = {

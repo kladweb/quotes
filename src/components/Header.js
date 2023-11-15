@@ -30,7 +30,7 @@ function Header() {
       <Navbar fixed="top" expand="md" bg="info" data-bs-theme="dark" className='z-2'>
         <Container>
           <LinkContainer to={'/main'}>
-            <Navbar.Brand eventKey="main">
+            <Navbar.Brand>
               <div className='quotes-fav-nav'>МУДРЫЕ ЦИТАТЫ</div>
             </Navbar.Brand>
           </LinkContainer>

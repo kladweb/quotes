@@ -117,7 +117,7 @@ function Quotes({favorite, isAdmin}) {
         isAdmin={isAdmin}
       />
       :
-      null);
+      null).reverse();
 
   return (
     <Container className='text-center'>
