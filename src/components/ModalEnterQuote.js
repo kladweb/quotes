@@ -111,9 +111,9 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
   }
 
   return (
-    <Modal show={showEnterQuote}>
+    <Modal show={showEnterQuote} className='pt-5 mt-sm-1 mt-4'>
       <Modal.Header>
-        <Modal.Title>Добавление новой цитаты</Modal.Title>
+        <Modal.Title className='h5'>Добавление новой цитаты</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form className='formQuotes' validated={validated} noValidate>
@@ -152,7 +152,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
                 setLinkInfo(e.target.value);
               }}
               className="my-3"
-            />np
+            />
           </FloatingLabel>
         </Form>
       </Modal.Body>
