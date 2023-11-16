@@ -152,8 +152,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
                 setLinkInfo(e.target.value);
               }}
               className="my-3"
-              list="datalistOptions"
-            />
+            />np
           </FloatingLabel>
         </Form>
       </Modal.Body>
