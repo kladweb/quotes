@@ -13,6 +13,7 @@ function QuoteUserPanel({quote, isFavQuote, countSub}) {
   const buttonAdd = <OverlayTrigger
     placement="bottom"
     delay={{show: 200, hide: 200}}
+    // overlay={<Tooltip id="button-tooltip-add" className='d-sm-block d-none'>Добавить в избранное</Tooltip>}
     overlay={<Tooltip id="button-tooltip-add">Добавить в избранное</Tooltip>}
   >
     <Button
@@ -61,7 +62,7 @@ function QuoteUserPanel({quote, isFavQuote, countSub}) {
 
         placement="bottom"
         delay={{show: 200, hide: 200}}
-        overlay={<Tooltip id="button-tooltip-count" className='d-sm-block d-none'>Количество добавивших</Tooltip>}
+        overlay={<Tooltip id="button-tooltip-count">Количество добавивших</Tooltip>}
       >
         <p className='d-inline-block my-0 py-0 pe-2 align-middle text-secondary count'>{countSub}</p>
       </OverlayTrigger>

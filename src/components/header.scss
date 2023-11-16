@@ -1,3 +1,7 @@
+.navbar-quotes {
+  z-index: 3000 !important;
+}
+
 .alert-pass {
   opacity: 0;
   animation: show-pass-info 1.5s ease-in-out;

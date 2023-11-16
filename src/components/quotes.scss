@@ -4,18 +4,22 @@
 
 #button-tooltip-add .tooltip-inner {
   background: #FFC107;
+  z-index: 10;
 }
 
 #button-tooltip-add .tooltip-arrow::before {
   border-bottom-color: #FFC107;
+  z-index: 10;
 }
 
 #button-tooltip-rem .tooltip-inner {
   background: #198754;
+  z-index: 10;
 }
 
 #button-tooltip-rem .tooltip-arrow::before {
   border-bottom-color: #198754;
+  z-index: 10;
 }
 
 .count {
@@ -24,10 +28,12 @@
 
 #button-tooltip-count .tooltip-inner {
   background: #6C757D;
+  z-index: 10;
 }
 
 #button-tooltip-count .tooltip-arrow::before {
   border-bottom-color: #6C757D;
+  z-index: 10;
 }
 
 .head-fav {
@@ -48,6 +54,11 @@
   font-size: 1rem;
 }
 
+.need-login:hover {
+  text-shadow: rgb(0, 195, 253) 1px 0 10px !important;
+  transition: 0.2s ease-in-out;
+}
+
 @media (max-width: 768px) {
   .cardQuote {
     font-size: 1rem;
@@ -61,5 +72,8 @@
 
   .buttAdd span, .buttRem span {
     font-size: 0.8rem;
+  }
+  .fav-note {
+    font-size: 0.9rem;
   }
 }
