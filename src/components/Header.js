@@ -27,7 +27,7 @@ function Header() {
 
   return (
     <>
-      <Navbar fixed="top" expand="md" bg="info" data-bs-theme="dark" className='z-2'>
+      <Navbar fixed="top" expand="md" bg="info" data-bs-theme="dark" className='z-2 navbar-quotes'>
         <Container>
           <LinkContainer to={'/main'}>
             <Navbar.Brand>
@@ -39,7 +39,7 @@ function Header() {
             <Nav className="text-center align-items-center">
               <LinkContainer to={'/main'}>
                 <Nav.Link className='my-0 mx-2 p-0' eventKey="main">
-                  <div className='quotes-fav-nav'>Полный список</div>
+                  <div className='quotes-fav-nav'>Основной список</div>
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to={'/myquotes'}>
