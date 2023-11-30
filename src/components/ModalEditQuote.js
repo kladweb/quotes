@@ -5,10 +5,12 @@ import Modal from 'react-bootstrap/Modal';
 
 import HintAuthors from './HintAuthors';
 import { useStorage } from '../firebase/storage';
+import { useQuotesService } from '../services/quotesLoadSaveService';
 
 function ModalEditQuote({quote, showModalEdit, setShowModalEdit, changeParameter, favorite}) {
 
-  const {changeUsersQuotes, changeAllQuotes, loadQuotesUsers} = useStorage();
+  const {loadQuotesUsers} = useStorage();
+  const {changeAllQuotes, changeUsersQuotes} = useQuotesService();
 
   const [newQuote, setNewQuote] = useState(quote.quote);
   const [author, setAuthor] = useState(quote.author);

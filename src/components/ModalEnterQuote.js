@@ -10,13 +10,15 @@ import { uid } from 'uid';
 import HintAuthors from './HintAuthors';
 import checkQuote from '../utilites/checkQuote';
 import { useStorage } from '../firebase/storage';
+import { useQuotesService } from '../services/quotesLoadSaveService';
 
 function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
 
   const dataQuotes = useSelector(state => state.quotes.quotes);
   const currUser = useSelector(state => state.currUser.currUser);
   const idCurrUser = useSelector(state => state.currUser.idCurrUser);
-  const {loadQuotesUsers, addQuoteToAll, changeUsersQuotes} = useStorage();
+  const {loadQuotesUsers} = useStorage();
+  const {changeAllQuotes, changeUsersQuotes} = useQuotesService();
 
   const [newQuote, setNewQuote] = useState('');
   const [author, setAuthor] = useState('');
@@ -64,7 +66,7 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
       return newQuote;
     });
     dataQuotesNew.push(newQuoteObj);
-    addQuoteToAll(newQuoteObj);
+    changeAllQuotes(newQuoteObj, 'add');
   }
 
   function addQuoteFav() {

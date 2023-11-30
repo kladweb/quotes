@@ -1,11 +1,13 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-import { useStorage } from '../firebase/storage';
+import { useQuotesService } from '../services/quotesLoadSaveService';
+import { useSelector } from 'react-redux';
 
 function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote, changeParameter, favorite}) {
 
-  const {changeUsersQuotes, changeAllQuotes} = useStorage();
+  const {changeAllQuotes, changeUsersQuotes} = useQuotesService();
+  const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
   const handleClose = () => {
     changeParameter(null);
     setShowModalDelete(false);
@@ -13,7 +15,7 @@ function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote, changePar
   const checkForm = () => {
     setShowModalDelete(false);
     if (quote.userAdded) {
-      changeUsersQuotes(quote, 'delete');
+      changeUsersQuotes(quote, 'delete', dataQuotesUsers);
     } else {
       changeAllQuotes(quote, 'delete');
     }
