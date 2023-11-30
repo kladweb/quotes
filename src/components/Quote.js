@@ -50,6 +50,7 @@ const Quote = ({
               quote={quote}
               isFavQuote={isFavQuote}
               countSub={countSub}
+              isAdmin={isAdmin}
             />
           }
           {

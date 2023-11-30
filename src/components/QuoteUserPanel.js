@@ -5,7 +5,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useStorage } from '../firebase/storage';
 
-function QuoteUserPanel({quote, isFavQuote, countSub}) {
+function QuoteUserPanel({quote, isFavQuote, countSub, isAdmin}) {
   const {loadIdQuotesFav, addFavQuote, removeFavQuote} = useStorage();
   const currUser = useSelector(state => state.currUser.currUser);
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function QuoteUserPanel({quote, isFavQuote, countSub}) {
         if (currUser) {
           loadIdQuotesFav()
             .then((data) => {
-              addFavQuote(quote, data);
+              addFavQuote(quote, data, isAdmin);
             });
         } else {
           navigate('/myquotes');

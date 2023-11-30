@@ -10,9 +10,11 @@ import ModalEnterQuote from './ModalEnterQuote';
 import '../bootstrap/bootstrap.min.css';
 import './quotes.scss';
 import { useStorage } from '../firebase/storage';
+import { useQuotesService } from '../services/quotesLoadSaveService';
 
 function Quotes({favorite, isAdmin}) {
-  const {changeAllQuotes, changeUsersQuotes, addFavQuote} = useStorage();
+  const {addFavQuote} = useStorage();
+  const {changeAllQuotes, changeUsersQuotes} = useQuotesService();
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [activeQuote, setActiveQuote] = useState({});
