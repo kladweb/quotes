@@ -4,11 +4,14 @@ import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useStorage } from '../firebase/storage';
+import { useQuotesService } from '../services/quotesLoadSaveService';
 
-function QuoteUserPanel({quote, isFavQuote, countSub, isAdmin}) {
-  const {loadIdQuotesFav, addFavQuote, removeFavQuote} = useStorage();
-  const currUser = useSelector(state => state.currUser.currUser);
+function QuoteUserPanel({quote, isFavQuote, countSub}) {
+  const {loadIdQuotesFav} = useStorage();
   const navigate = useNavigate();
+  const {changeFavList} = useQuotesService();
+  const currUser = useSelector(state => state.currUser.currUser);
+  const dataQuotesIdFav = useSelector(state => state.quotesIdFav.quotesIdFav);
 
   const buttonAdd = <OverlayTrigger
     placement="bottom"
@@ -25,7 +28,7 @@ function QuoteUserPanel({quote, isFavQuote, countSub, isAdmin}) {
         if (currUser) {
           loadIdQuotesFav()
             .then((data) => {
-              addFavQuote(quote, data, isAdmin);
+              changeFavList(quote, dataQuotesIdFav, 'add');
             });
         } else {
           navigate('/myquotes');
@@ -49,7 +52,7 @@ function QuoteUserPanel({quote, isFavQuote, countSub, isAdmin}) {
         e.stopPropagation();
         loadIdQuotesFav()
           .then((data) => {
-            removeFavQuote(quote, data);
+            changeFavList(quote, data, 'remove');
           });
       }}>
       <span className="material-icons align-bottom text-success m-0 p-0">done</span>
