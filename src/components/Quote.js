@@ -50,7 +50,6 @@ const Quote = ({
               quote={quote}
               isFavQuote={isFavQuote}
               countSub={countSub}
-              isAdmin={isAdmin}
             />
           }
           {
@@ -60,7 +59,6 @@ const Quote = ({
               delQuote={delQuote}
               toAllQuotes={toAllQuotes}
               quote={quote}
-              isAdmin={isAdmin}
             />
           }
 

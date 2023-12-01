@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { collection, doc, setDoc, getDoc, getDocs } from 'firebase/firestore';
 import { setQuotesUsers } from '../redux/quotesUsersSlice';
 import { setQuotesIdFav } from '../redux/quotesIdFavSlice';
@@ -9,14 +9,10 @@ import { quotesFetched } from '../redux/quotesSlise';
 
 export const useStorage = () => {
   const dispatch = useDispatch();
-  const idCurrUser = useSelector(state => state.currUser.idCurrUser);
-  const dataQuotesIdFav = useSelector(state => state.quotesIdFav.quotesIdFav);
-  const dataQuotes = useSelector(state => state.quotes.quotes);
 
   const initUser = () => {
     onAuthStateChanged(auth, (getUser) => {
       if (getUser) {
-        // console.log(getUser);
         const user = {};
         user.email = getUser.email;
         user.displayName = getUser.displayName;
@@ -104,80 +100,6 @@ export const useStorage = () => {
     }
   }
 
-  const changeFavQuote = (quote, dataQuotesIdFavCurrent, action) => {
-
-  }
-
-  const addFavQuote = (quote, dataQuotesIdFavCurrent, isAdmin) => {
-    const idAddedUser = (isAdmin) ? quote.userAdded : idCurrUser;
-    let dataQuotesIdFavNew = [];
-    let addQuote = true;
-    dataQuotesIdFavNew = dataQuotesIdFavCurrent.map((item) => {
-      const newItem = {};
-      newItem.id = item.id;
-      if (item.userAdded) {
-        newItem.userAdded = item.userAdded;
-      }
-      if (item.userName) {
-        newItem.userName = item.userName;
-      }
-      newItem.usersArr = [];
-      if (item.usersArr) {
-        newItem.usersArr = [...item.usersArr];
-      }
-      if (newItem.id === quote.id) {
-        if (!newItem.usersArr.includes(idAddedUser)) {
-          (newItem.usersArr).push(idAddedUser);
-          addQuote = false;
-        }
-      }
-      return newItem;
-    });
-    if (addQuote || dataQuotesIdFavNew.length === 0) {
-      const newObj = {};
-      newObj.id = quote.id;
-      newObj.usersArr = [idAddedUser];
-      dataQuotesIdFavNew.push(newObj);
-    }
-    dispatch(setQuotesIdFav({quotesIdFav: dataQuotesIdFavNew}));
-    updateQuotesIdFav(dataQuotesIdFavNew)
-      .then(() => {
-        console.log('Данные на сервере изменены');
-      })
-      .catch((e) => {
-        console.error("Ошибка загрузки данных: ", e);
-      });
-  }
-
-  const removeFavQuote = (quote, dataQuotesIdFavCurrent) => {
-    const dataQuotesIdFavNew = [];
-    dataQuotesIdFavCurrent.forEach((item) => {
-      const newItem = {};
-      newItem.id = item.id;
-      newItem.usersArr = [];
-      if (item.usersArr) {
-        newItem.usersArr = [...item.usersArr];
-      }
-      if (newItem.id === quote.id) {
-        if (item.usersArr.includes(idCurrUser)) {
-          let i = newItem.usersArr.indexOf(idCurrUser);
-          newItem.usersArr.splice(i, 1);
-        }
-      }
-      if (newItem.usersArr.length !== 0) {
-        dataQuotesIdFavNew.push(newItem);
-      }
-    });
-    dispatch(setQuotesIdFav({quotesIdFav: dataQuotesIdFavNew}));
-    updateQuotesIdFav(dataQuotesIdFavNew)
-      .then(() => {
-        console.log('Данные на сервере изменены');
-      })
-      .catch((e) => {
-        console.error("Ошибка загрузки данных: ", e);
-      });
-  }
-
   return {
     initUser,
     initAppData,
@@ -186,7 +108,5 @@ export const useStorage = () => {
     updateQuotesIdFav,
     loadQuotesUsers,
     updateQuotesUser,
-    addFavQuote,
-    removeFavQuote,
   };
 }

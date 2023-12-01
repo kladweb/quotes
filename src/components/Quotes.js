@@ -9,12 +9,10 @@ import ModalDeleteQuote from './ModalDeleteQuote'
 import ModalEnterQuote from './ModalEnterQuote';
 import '../bootstrap/bootstrap.min.css';
 import './quotes.scss';
-import { useStorage } from '../firebase/storage';
 import { useQuotesService } from '../services/quotesLoadSaveService';
 
 function Quotes({favorite, isAdmin}) {
-  const {addFavQuote} = useStorage();
-  const {changeAllQuotes, changeUsersQuotes} = useQuotesService();
+  const {changeAllQuotes, changeUsersQuotes, changeFavList} = useQuotesService();
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalDelete, setShowModalDelete] = useState(false);
   const [activeQuote, setActiveQuote] = useState({});
@@ -61,7 +59,7 @@ function Quotes({favorite, isAdmin}) {
 
   const onToAllQuotes = (quote) => {
     changeAllQuotes(quote, 'add');
-    addFavQuote(quote, dataQuotesIdFav, isAdmin);
+    changeFavList(quote, dataQuotesIdFav, 'add');
     changeUsersQuotes(quote, 'delete');
   }
 

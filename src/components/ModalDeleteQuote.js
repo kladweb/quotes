@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import { useQuotesService } from '../services/quotesLoadSaveService';
 import { useSelector } from 'react-redux';
 
-function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote, changeParameter, favorite}) {
+function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote, changeParameter}) {
 
   const {changeAllQuotes, changeUsersQuotes} = useQuotesService();
   const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
