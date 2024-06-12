@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
-
 import Quote from './Quote';
 import ModalEditQuote from './ModalEditQuote';
 import ModalDeleteQuote from './ModalDeleteQuote'

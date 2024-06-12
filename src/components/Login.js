@@ -65,7 +65,6 @@ function Login() {
               onClick={loginGoogle}
               style={{transform: 'translateY(50px)'}}
             >
-              {/*<img src="/img/google_icon.png" alt="google"/>*/}
               <Image src='/img/google_icon.png' className='me-3'/>
               Войти при помощи аккаунта GOOGLE
             </Button>
