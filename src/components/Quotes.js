@@ -27,9 +27,23 @@ function Quotes({favorite, isAdmin}) {
   const [showEnterQuote, setShowEnterQuote] = useState(false);
   const [idCurrUser, setIdCurrUser] = useState(null);
   const [dataQuotesAll, setDataQuotesAll] = useState([]);
+  const [numberQuotes, setNumberQuotes] = useState(8);
+
+  useEffect(() => {
+    const handlerScroll = () => {
+      if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight) {
+        setNumberQuotes(prevState => prevState + 5);
+      }
+    }
+    window.addEventListener('scroll', handlerScroll);
+    return () => {
+      window.removeEventListener('scroll', handlerScroll);
+    }
+  }, []);
 
   useEffect(() => {
     let dataQuotesUserCurrent = [];
+    const quotes = [];
     if (currUser) {
       setIdCurrUser(currUser.uid);
       dataQuotesUsers.forEach((quote) => {
@@ -39,11 +53,16 @@ function Quotes({favorite, isAdmin}) {
       });
     }
     if (!isAdmin) {
-      setDataQuotesAll([...dataQuotes, ...dataQuotesUserCurrent]);
+      quotes.push(...dataQuotes, ...dataQuotesUserCurrent);
     } else {
-      setDataQuotesAll(dataQuotesUserCurrent);
+      quotes.push(...dataQuotesUserCurrent);
     }
-  }, [statusLoad]);
+    const quotesFilter = quotes.reverse().filter(quote =>
+      ((isFavQuote(quote) && !quote.userAdded) ||
+        (!favorite && !quote.userAdded) ||
+        (favorite && quote.userAdded)));
+    setDataQuotesAll(quotesFilter.slice(0, numberQuotes));
+  }, [statusLoad, numberQuotes]);
 
   const onDeleteQuote = (quote) => {
     setShowModalDelete(true);
@@ -97,27 +116,6 @@ function Quotes({favorite, isAdmin}) {
     setShowEnterQuote(true);
   }
 
-  const quotesList = dataQuotesAll.map(quote =>
-    ((isFavQuote(quote) && !quote.userAdded) ||
-      (!favorite && !quote.userAdded) ||
-      (favorite && quote.userAdded)) ?
-      <Quote
-        key={quote.id}
-        quote={quote}
-        delQuote={onDeleteQuote}
-        editQuote={onEditQuote}
-        toAllQuotes={onToAllQuotes}
-        isFavQuote={isFavQuote(quote)}
-        countSub={countSub(quote)}
-        changeCurrentQuote={changeParameter}
-        isAdmPanel={quote === currentQuote}
-        isUserAdmin={idCurrUser === adminId.userId}
-        isAdmin={isAdmin}
-      />
-      :
-      null).reverse();
-
-  console.log('render')
   return (
     <Container className='text-center'>
       <Row>
@@ -125,7 +123,22 @@ function Quotes({favorite, isAdmin}) {
           {
             (statusLoad === 'loaded') ?
               <div className='my-5'>
-                {quotesList}
+                {
+                  dataQuotesAll.map(quote =>
+                    <Quote
+                      key={quote.id}
+                      quote={quote}
+                      delQuote={onDeleteQuote}
+                      editQuote={onEditQuote}
+                      toAllQuotes={onToAllQuotes}
+                      isFavQuote={isFavQuote(quote)}
+                      countSub={countSub(quote)}
+                      changeCurrentQuote={changeParameter}
+                      isAdmPanel={quote === currentQuote}
+                      isUserAdmin={idCurrUser === adminId.userId}
+                      isAdmin={isAdmin}
+                    />)
+                }
               </div>
               :
               <div className='mt-4 pt-5'>
