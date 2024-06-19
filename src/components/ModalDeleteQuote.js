@@ -1,8 +1,8 @@
+import { useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 import { useQuotesService } from '../services/quotesLoadSaveService';
-import { useSelector } from 'react-redux';
 
 function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote, changeParameter}) {
 

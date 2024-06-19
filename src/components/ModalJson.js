@@ -1,7 +1,7 @@
+import { useSelector } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useSelector } from 'react-redux';
 
 function ModalJson({showModalJson, setShowModalJson}) {
 
