@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import Container from 'react-bootstrap/Container';
@@ -6,7 +6,6 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Image from 'react-bootstrap/Image';
 import Spinner from 'react-bootstrap/Spinner';
-
 import '../bootstrap/bootstrap.min.css';
 import { useStorage } from '../firebase/storage';
 
@@ -15,15 +14,15 @@ import './header.scss';
 function Header() {
   const {initUser, initAppData} = useStorage();
   const currUser = useSelector(state => state.currUser.currUser);
-  let srcAvatar = null;
-  if (currUser) {
-    srcAvatar = currUser.photoURL;
-  }
+  const srcAvatar = (currUser) ? currUser.photoURL : null;
 
   useEffect(() => {
     initUser();
-    initAppData();
   }, []);
+
+  useEffect(() => {
+    initAppData(currUser);
+  }, [currUser]);
 
   return (
     <>
@@ -53,7 +52,7 @@ function Header() {
                     (currUser) ?
                       <Image src={srcAvatar} width={40} height={40} rounded/>
                       :
-                      (currUser === 0) ?
+                      (srcAvatar && srcAvatar === '') ?
                         <div className="mx-1">
                           <Spinner animation="border" variant="light"/>
                         </div>

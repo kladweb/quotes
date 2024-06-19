@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { useStorage } from '../firebase/storage';
 import { useQuotesService } from '../services/quotesLoadSaveService';
+import { quotesFavFetched } from '../redux/quotesFavSlise';
 
 function QuoteUserPanel({quote, isFavQuote, countSub}) {
   const {loadIdQuotesFav} = useStorage();

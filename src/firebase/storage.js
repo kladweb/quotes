@@ -6,8 +6,12 @@ import { auth, db } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { setCurrUser } from '../redux/loginUserSlice';
 import { quotesFetched } from '../redux/quotesSlise';
+import { quotesFavFetched } from '../redux/quotesFavSlise';
 
 export const useStorage = () => {
+  const adminId = {
+    userId: process.env.REACT_APP_FIREBASE_ADMIN_ID
+  };
   const dispatch = useDispatch();
 
   const initUser = () => {
@@ -45,22 +49,52 @@ export const useStorage = () => {
     return JSON.parse(querySnapshot.data().dataQuotesUsers);
   }
 
-  const initAppData = () => {
+  const initAppData = (currUser) => {
     loadAppData()
       .then((data) => {
         console.log('Данные получены !');
+        const quotesAll = [];
+        const idFav = [];
+        const quotesUsers = []
         data.forEach((obj) => {
           if (obj.dataQuotesApp) {
-            dispatch(quotesFetched({quotes: JSON.parse(obj.dataQuotesApp), dataLoadStatus: 'loaded'}));
+            quotesAll.push(...JSON.parse(obj.dataQuotesApp));
+            dispatch(quotesFetched({quotes: quotesAll, dataLoadStatus: 'loaded'}));
           }
           if (obj.dataFav) {
-            dispatch(setQuotesIdFav({quotesIdFav: JSON.parse(obj.dataFav)}));
+            idFav.push(...JSON.parse(obj.dataFav));
+            dispatch(setQuotesIdFav({quotesIdFav: idFav}));
           }
           if (obj.dataQuotesUsers) {
-            dispatch(setQuotesUsers({quotesUsers: JSON.parse(obj.dataQuotesUsers)}));
+            quotesUsers.push(...JSON.parse(obj.dataQuotesUsers))
+            dispatch(setQuotesUsers({quotesUsers: quotesUsers}));
           }
         });
+        return {quotesAll, idFav, quotesUsers};
+      })
+      .then(({quotesAll, idFav, quotesUsers}) => {
+        // console.log(quotesAll);
+        // console.log(idFav);
+        // console.log(quotesUsers);
+        if (currUser) {
+          getFavQuotes(quotesAll, idFav, quotesUsers, currUser);
+        }
       });
+  }
+
+  const getFavQuotes = (quotesAll, idFav, quotesUsers, user) => {
+    const quotesFav = quotesAll.filter((quote) => {
+      let isFav = false;
+      idFav.forEach((item) => {
+        if (quote.id === item.id) {
+          isFav = item.usersArr.includes(user.uid);
+        }
+      });
+      return isFav;
+    });
+    // console.log(quotesFav);
+    const quotesUser = quotesUsers.filter(quote => quote.userAdded === user.uid || user?.uid === adminId.userId);
+    dispatch(quotesFavFetched(({quotesFav: [...quotesUser, ...quotesFav]})));
   }
 
   const updateQuotesAll = async (data) => {
