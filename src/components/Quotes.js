@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
@@ -11,40 +11,39 @@ import './quotes.scss';
 import { useQuotesService } from '../services/quotesLoadSaveService';
 
 function Quotes({favorite, isAdmin}) {
+  const adminId = {
+    userId: process.env.REACT_APP_FIREBASE_ADMIN_ID
+  };
   const {changeAllQuotes, changeUsersQuotes, changeFavList} = useQuotesService();
-  const [showModalEdit, setShowModalEdit] = useState(false);
-  const [showModalDelete, setShowModalDelete] = useState(false);
-  const [activeQuote, setActiveQuote] = useState({});
-  const [currentQuote, setCurrentQuote] = useState(false);
-  const [showEnterQuote, setShowEnterQuote] = useState(false);
-
   const statusLoad = useSelector(state => state.quotes.dataLoadStatus);
   const dataQuotes = useSelector(state => state.quotes.quotes);
   const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
   const currUser = useSelector(state => state.currUser.currUser);
   const dataQuotesIdFav = useSelector(state => state.quotesIdFav.quotesIdFav);
+  const [showModalEdit, setShowModalEdit] = useState(false);
+  const [showModalDelete, setShowModalDelete] = useState(false);
+  const [activeQuote, setActiveQuote] = useState({});
+  const [currentQuote, setCurrentQuote] = useState(false);
+  const [showEnterQuote, setShowEnterQuote] = useState(false);
+  const [idCurrUser, setIdCurrUser] = useState(null);
+  const [dataQuotesAll, setDataQuotesAll] = useState([]);
 
-  const adminId = {
-    userId: process.env.REACT_APP_FIREBASE_ADMIN_ID
-  };
-
-  let idCurrUser = null;
-  let dataQuotesUserCurrent = [];
-  let dataQuotesAll = [];
-  if (currUser) {
-    idCurrUser = currUser.uid;
-    dataQuotesUsers.forEach((quote) => {
-      if (quote.userAdded === idCurrUser || isAdmin) {
-        dataQuotesUserCurrent.push(quote);
-      }
-    });
-  }
-
-  if (!isAdmin) {
-    dataQuotesAll = [...dataQuotes, ...dataQuotesUserCurrent];
-  } else {
-    dataQuotesAll = dataQuotesUserCurrent;
-  }
+  useEffect(() => {
+    let dataQuotesUserCurrent = [];
+    if (currUser) {
+      setIdCurrUser(currUser.uid);
+      dataQuotesUsers.forEach((quote) => {
+        if (quote.userAdded === idCurrUser || isAdmin) {
+          dataQuotesUserCurrent.push(quote);
+        }
+      });
+    }
+    if (!isAdmin) {
+      setDataQuotesAll([...dataQuotes, ...dataQuotesUserCurrent]);
+    } else {
+      setDataQuotesAll(dataQuotesUserCurrent);
+    }
+  }, [statusLoad]);
 
   const onDeleteQuote = (quote) => {
     setShowModalDelete(true);
@@ -118,6 +117,7 @@ function Quotes({favorite, isAdmin}) {
       :
       null).reverse();
 
+  console.log('render')
   return (
     <Container className='text-center'>
       <Row>

@@ -39,12 +39,12 @@ function Header() {
             <Nav className="text-center align-items-center">
               <LinkContainer to={'/main'}>
                 <Nav.Link className='my-0 mx-2 p-0' eventKey="main">
-                  <div className='quotes-fav-nav'>Основной список</div>
+                  <div className='quotes-fav-nav'>Все</div>
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to={'/myquotes'}>
                 <Nav.Link className='my-0 mx-2 p-0' eventKey="myquotes">
-                  <div className='quotes-fav-nav'>Избранные цитаты</div>
+                  <div className='quotes-fav-nav'>Избранные</div>
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to={'/login'}>
