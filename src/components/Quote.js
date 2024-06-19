@@ -3,20 +3,25 @@ import Card from 'react-bootstrap/Card';
 import '../bootstrap/bootstrap.min.css';
 import QuoteAdminPanel from './QuoteAdminPanel'
 import QuoteUserPanel from './QuoteUserPanel';
+import { useSelector } from 'react-redux';
 
-const Quote = ({
-                 quote,
-                 delQuote,
-                 editQuote,
-                 toAllQuotes,
-                 isFavQuote,
-                 countSub,
-                 isAdmPanel,
-                 changeCurrentQuote,
-                 isUserAdmin,
-                 isAdmin
-               }) => {
-
+const Quote = (
+  {
+    quote,
+    delQuote,
+    editQuote,
+    toAllQuotes,
+    isFavQuote,
+    countSub,
+    isAdmPanel,
+    changeCurrentQuote,
+    isUserAdmin,
+    isAdmin
+  }) => {
+  const adminId = {
+    userId: process.env.REACT_APP_FIREBASE_ADMIN_ID
+  };
+  const currUser = useSelector(state => state.currUser.currUser);
   const handlerShowAdminPanel = (e) => {
     console.log(isUserAdmin);
     if (!quote.userAdded && !isUserAdmin) {
@@ -40,7 +45,7 @@ const Quote = ({
       }
       <Card
         className="my-3 text-start cardQuote"
-        border={(quote.userAdded) ? "warning" : "info"}
+        border={(!quote.userAdded) ? "info" : (quote?.userAdded === currUser?.uid) ? "warning" : "danger"}
         onClick={handlerShowAdminPanel}
       >
         <div className='z-0 m-1 d-block position-absolute fixed-bottom'>
@@ -76,7 +81,9 @@ const Quote = ({
   );
 }
 
-export default React.memo(Quote, propsAreEqual);
+export default Quote;
+
+// export default React.memo(Quote, propsAreEqual);
 
 function propsAreEqual(prevProps, nextProps) {
   return prevProps.isAdmPanel === nextProps.isAdmPanel &&

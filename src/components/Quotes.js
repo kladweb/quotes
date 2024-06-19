@@ -9,14 +9,18 @@ import ModalEnterQuote from './ModalEnterQuote';
 import '../bootstrap/bootstrap.min.css';
 import './quotes.scss';
 import { useQuotesService } from '../services/quotesLoadSaveService';
+import { useLocation } from 'react-router-dom';
 
 function Quotes({favorite, isAdmin}) {
   const adminId = {
     userId: process.env.REACT_APP_FIREBASE_ADMIN_ID
   };
+  // const location = useLocation();
+  // console.log(location.pathname);
   const {changeAllQuotes, changeUsersQuotes, changeFavList} = useQuotesService();
   const statusLoad = useSelector(state => state.quotes.dataLoadStatus);
   const dataQuotes = useSelector(state => state.quotes.quotes);
+  const dataFavQuotes = useSelector(state => state.quotesFav.quotesFav);
   const dataQuotesUsers = useSelector(state => state.quotesUsers.quotesUsers);
   const currUser = useSelector(state => state.currUser.currUser);
   const dataQuotesIdFav = useSelector(state => state.quotesIdFav.quotesIdFav);
@@ -25,8 +29,8 @@ function Quotes({favorite, isAdmin}) {
   const [activeQuote, setActiveQuote] = useState({});
   const [currentQuote, setCurrentQuote] = useState(false);
   const [showEnterQuote, setShowEnterQuote] = useState(false);
-  const [idCurrUser, setIdCurrUser] = useState(null);
-  const [dataQuotesAll, setDataQuotesAll] = useState([]);
+  // const [idCurrUser, setIdCurrUser] = useState(null);
+  const [dataQuotesView, setDataQuotesView] = useState([]);
   const [numberQuotes, setNumberQuotes] = useState(8);
 
   useEffect(() => {
@@ -42,27 +46,9 @@ function Quotes({favorite, isAdmin}) {
   }, []);
 
   useEffect(() => {
-    let dataQuotesUserCurrent = [];
-    const quotes = [];
-    if (currUser) {
-      setIdCurrUser(currUser.uid);
-      dataQuotesUsers.forEach((quote) => {
-        if (quote.userAdded === idCurrUser || isAdmin) {
-          dataQuotesUserCurrent.push(quote);
-        }
-      });
-    }
-    if (!isAdmin) {
-      quotes.push(...dataQuotes, ...dataQuotesUserCurrent);
-    } else {
-      quotes.push(...dataQuotesUserCurrent);
-    }
-    const quotesFilter = quotes.reverse().filter(quote =>
-      ((isFavQuote(quote) && !quote.userAdded) ||
-        (!favorite && !quote.userAdded) ||
-        (favorite && quote.userAdded)));
-    setDataQuotesAll(quotesFilter.slice(0, numberQuotes));
-  }, [statusLoad, numberQuotes]);
+    const currentQuotes = (favorite) ? dataFavQuotes : dataQuotes;
+    setDataQuotesView(currentQuotes.slice(0, numberQuotes));
+  }, [statusLoad, numberQuotes, dataFavQuotes, dataQuotesUsers]);
 
   const onDeleteQuote = (quote) => {
     setShowModalDelete(true);
@@ -81,26 +67,20 @@ function Quotes({favorite, isAdmin}) {
   }
 
   const isFavQuote = (quote) => {
-    let isFav = false;
-    const idQuote = quote.id;
-    if (dataQuotesIdFav) {
-      dataQuotesIdFav.forEach((quoteFav) => {
-        if (quoteFav.id === idQuote) {
-          if (quoteFav.usersArr && quoteFav.usersArr.includes(idCurrUser)) {
-            isFav = true;
-          }
-        }
-      });
-    }
-    return isFav;
+    let idFav = false;
+    dataFavQuotes.forEach((favQuote) => {
+      if (favQuote.id === quote.id) {
+        idFav = true;
+      }
+    });
+    return idFav;
   }
 
   const countSub = (quote) => {
     let count = 0;
-    const idQuote = quote.id;
     if (dataQuotesIdFav) {
       dataQuotesIdFav.forEach((quoteFav) => {
-        if (quoteFav.id === idQuote) {
+        if (quoteFav.id === quote.id) {
           count = quoteFav.usersArr.length;
         }
       });
@@ -124,7 +104,7 @@ function Quotes({favorite, isAdmin}) {
             (statusLoad === 'loaded') ?
               <div className='my-5'>
                 {
-                  dataQuotesAll.map(quote =>
+                  dataQuotesView.map(quote =>
                     <Quote
                       key={quote.id}
                       quote={quote}
@@ -135,7 +115,7 @@ function Quotes({favorite, isAdmin}) {
                       countSub={countSub(quote)}
                       changeCurrentQuote={changeParameter}
                       isAdmPanel={quote === currentQuote}
-                      isUserAdmin={idCurrUser === adminId.userId}
+                      isUserAdmin={currUser?.uid === adminId.userId}
                       isAdmin={isAdmin}
                     />)
                 }
@@ -166,7 +146,7 @@ function Quotes({favorite, isAdmin}) {
               /> : null
           }
           {
-            (idCurrUser === adminId.userId || favorite) &&
+            (currUser?.uid === adminId.userId || favorite) &&
             <Button
               variant="light"
               className='text-info mx-auto d-block my-5 w-auto add-quote'

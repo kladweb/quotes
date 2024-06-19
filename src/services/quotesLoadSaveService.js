@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useStorage } from '../firebase/storage';
 import { setQuotesUsers } from '../redux/quotesUsersSlice';
 import { setQuotesIdFav } from '../redux/quotesIdFavSlice';
+import { quotesFavFetched } from '../redux/quotesFavSlise';
 
 export const useQuotesService = () => {
   const dispatch = useDispatch();
   const {updateQuotesAll, updateQuotesUser, updateQuotesIdFav} = useStorage();
   const dataQuotes = useSelector(state => state.quotes.quotes);
   const idCurrUser = useSelector(state => state.currUser.idCurrUser);
+  const dataFavQuotes = useSelector(state => state.quotesFav.quotesFav);
 
   const changeAllQuotes = (quote, action) => {
     const newQuotes = [...dataQuotes];
@@ -52,12 +54,15 @@ export const useQuotesService = () => {
     });
     switch (action) {
       case 'delete':
+        dispatch(quotesFavFetched({quotesFav: dataFavQuotes.filter(item => item.id !== quote.id)}));
         newQuotes.splice(numActiveQuote, 1);
         break;
       case 'edit':
+        dispatch(quotesFavFetched({quotesFav: [quote, ...dataFavQuotes.filter(item => item.id !== quote.id)]}));
         newQuotes.splice(numActiveQuote, 1, quote);
         break;
       case 'add':
+        dispatch(quotesFavFetched({quotesFav: [quote, ...dataFavQuotes]}));
         newQuotes.push(quote);
         break;
     }
@@ -76,6 +81,7 @@ export const useQuotesService = () => {
     let addQuote = true;
     switch (action) {
       case 'add':
+        dispatch(quotesFavFetched({quotesFav: [...dataFavQuotes, quote]}));
         dataQuotesIdFavNew = dataQuotesIdFavCurrent.map((item) => {
           const newItem = {};
           newItem.id = item.id;
@@ -105,6 +111,7 @@ export const useQuotesService = () => {
         }
         break;
       case 'remove':
+        dispatch(quotesFavFetched({quotesFav: dataFavQuotes.filter(item => item.id !== quote.id)}));
         dataQuotesIdFavCurrent.forEach((item) => {
           const newItem = {};
           newItem.id = item.id;

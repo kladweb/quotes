@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 import { useQuotesService } from '../services/quotesLoadSaveService';
+import { quotesFavFetched } from '../redux/quotesFavSlise';
 
 function ModalDeleteQuote({showModalDelete, setShowModalDelete, quote, changeParameter}) {
 
