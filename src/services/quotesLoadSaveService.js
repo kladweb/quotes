@@ -81,7 +81,9 @@ export const useQuotesService = () => {
     let addQuote = true;
     switch (action) {
       case 'add':
-        dispatch(quotesFavFetched({quotesFav: [...dataFavQuotes, quote]}));
+        dispatch(quotesFavFetched({
+          quotesFav: [quote, ...dataFavQuotes].sort(sortFavQuotes)
+        }));
         dataQuotesIdFavNew = dataQuotesIdFavCurrent.map((item) => {
           const newItem = {};
           newItem.id = item.id;
@@ -139,6 +141,18 @@ export const useQuotesService = () => {
       .catch((e) => {
         console.error("Ошибка загрузки данных: ", e);
       });
+  }
+
+  const sortFavQuotes = (i1, i2) => {
+    if (i1.userAdded && (i2.userAdded)) {
+      return 0;
+    }
+    if (i1.userAdded && !(i2.userAdded)) {
+      return -1;
+    }
+    if (!(i1.userAdded) && i2.userAdded) {
+      return 1;
+    }
   }
 
   return {
