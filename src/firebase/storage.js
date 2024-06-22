@@ -59,7 +59,7 @@ export const useStorage = () => {
         data.forEach((obj) => {
           if (obj.dataQuotesApp) {
             quotesAll.push(...JSON.parse(obj.dataQuotesApp));
-            dispatch(quotesFetched({quotes: quotesAll, dataLoadStatus: 'loaded'}));
+            dispatch(quotesFetched({quotes: quotesAll.reverse(), dataLoadStatus: 'loaded'}));
           }
           if (obj.dataFav) {
             idFav.push(...JSON.parse(obj.dataFav));
