@@ -48,7 +48,7 @@ function Quotes({favorite, isAdmin}) {
   useEffect(() => {
     const currentQuotes = (favorite) ? dataFavQuotes : dataQuotes;
     setDataQuotesView(currentQuotes.slice(0, numberQuotes));
-  }, [statusLoad, numberQuotes, dataFavQuotes, dataQuotesUsers]);
+  }, [statusLoad, numberQuotes, dataQuotes, dataFavQuotes, dataQuotesUsers]);
 
   const onDeleteQuote = (quote) => {
     setShowModalDelete(true);
