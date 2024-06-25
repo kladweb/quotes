@@ -73,9 +73,6 @@ export const useStorage = () => {
         return {quotesAll, idFav, quotesUsers};
       })
       .then(({quotesAll, idFav, quotesUsers}) => {
-        // console.log(quotesAll);
-        // console.log(idFav);
-        // console.log(quotesUsers);
         if (currUser) {
           getFavQuotes(quotesAll, idFav, quotesUsers, currUser);
         }

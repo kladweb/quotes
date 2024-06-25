@@ -32,7 +32,7 @@ export const useQuotesService = () => {
         newQuote.id = quote.id;
         newQuote.quote = quote.quote;
         newQuote.author = quote.author;
-        newQuotes.push(newQuote);
+        newQuotes.unshift(newQuote);
         break;
     }
     updateQuotesAll(newQuotes)
