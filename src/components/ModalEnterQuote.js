@@ -12,8 +12,10 @@ import checkQuote from '../utilites/checkQuote';
 import { useStorage } from '../firebase/storage';
 import { useQuotesService } from '../services/quotesLoadSaveService';
 
-function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
-
+function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite, setInfo, setShowModalInfo}) {
+  const adminId = {
+    userId: process.env.REACT_APP_FIREBASE_ADMIN_ID
+  };
   const dataQuotes = useSelector(state => state.quotes.quotes);
   const currUser = useSelector(state => state.currUser.currUser);
   const idCurrUser = useSelector(state => state.currUser.idCurrUser);
@@ -38,8 +40,14 @@ function ModalEnterQuote({showEnterQuote, setShowEnterQuote, favorite}) {
       document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     }, 500);
     if (newQuote.trim() !== '' && author.trim() !== '') {
-      if (favorite) {
+
+      if (currUser?.uid !== adminId.userId || favorite) {
+        setInfo('Цитата сохранена в Избранные');
+        setShowModalInfo(true);
         addQuoteFav();
+        setTimeout(() => {
+          setShowModalInfo(false);
+        }, 1500);
       } else {
         addQuoteAll();
       }

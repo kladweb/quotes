@@ -23,7 +23,6 @@ const Quote = (
   };
   const currUser = useSelector(state => state.currUser.currUser);
   const handlerShowAdminPanel = (e) => {
-    console.log(isUserAdmin);
     if (!quote.userAdded && !isUserAdmin) {
       changeCurrentQuote(null);
       return;

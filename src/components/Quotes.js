@@ -5,7 +5,6 @@ import Spinner from 'react-bootstrap/Spinner';
 import Quote from './Quote';
 import ModalEditQuote from './ModalEditQuote';
 import ModalDeleteQuote from './ModalDeleteQuote'
-import ModalEnterQuote from './ModalEnterQuote';
 import '../bootstrap/bootstrap.min.css';
 import './quotes.scss';
 import { useQuotesService } from '../services/quotesLoadSaveService';
@@ -92,10 +91,6 @@ function Quotes({favorite, isAdmin}) {
     setCurrentQuote(currentQuote);
   }
 
-  const addQuote = () => {
-    setShowEnterQuote(true);
-  }
-
   return (
     <Container className='text-center'>
       <Row>
@@ -145,21 +140,6 @@ function Quotes({favorite, isAdmin}) {
                 favorite={favorite}
               /> : null
           }
-          {
-            (currUser?.uid === adminId.userId || favorite) &&
-            <Button
-              variant="light"
-              className='text-info mx-auto d-block my-5 w-auto add-quote'
-              onClick={addQuote}
-            >
-              Добавить цитату
-            </Button>
-          }
-          <ModalEnterQuote
-            showEnterQuote={showEnterQuote}
-            setShowEnterQuote={setShowEnterQuote}
-            favorite={favorite}
-          />
         </Col>
       </Row>
     </Container>
