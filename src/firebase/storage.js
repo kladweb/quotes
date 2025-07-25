@@ -52,14 +52,15 @@ export const useStorage = () => {
   const initAppData = (currUser) => {
     loadAppData()
       .then((data) => {
-        console.log('Данные получены !');
+        // console.log('Данные получены !');
         const quotesAll = [];
         const idFav = [];
         const quotesUsers = []
         data.forEach((obj) => {
           if (obj.dataQuotesApp) {
             quotesAll.push(...JSON.parse(obj.dataQuotesApp));
-            dispatch(quotesFetched({quotes: quotesAll.reverse(), dataLoadStatus: 'loaded'}));
+            console.log('Всего цитат: ', quotesAll.length);
+            dispatch(quotesFetched({quotes: quotesAll, dataLoadStatus: 'loaded'}));
           }
           if (obj.dataFav) {
             idFav.push(...JSON.parse(obj.dataFav));
