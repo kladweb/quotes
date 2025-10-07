@@ -10,7 +10,6 @@ import '../bootstrap/bootstrap.min.css';
 import { useStorage } from '../firebase/storage';
 
 import './header.scss';
-import { Button } from 'react-bootstrap';
 import ModalEnterQuote from './ModalEnterQuote';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ModalInfo from './ModalInfo';
