@@ -8,14 +8,11 @@ import ModalDeleteQuote from './ModalDeleteQuote'
 import '../bootstrap/bootstrap.min.css';
 import './quotes.scss';
 import { useQuotesService } from '../services/quotesLoadSaveService';
-import { useLocation } from 'react-router-dom';
 
 function Quotes({favorite, isAdmin}) {
   const adminId = {
     userId: process.env.REACT_APP_FIREBASE_ADMIN_ID
   };
-  // const location = useLocation();
-  // console.log(location.pathname);
   const {changeAllQuotes, changeUsersQuotes, changeFavList} = useQuotesService();
   const statusLoad = useSelector(state => state.quotes.dataLoadStatus);
   const dataQuotes = useSelector(state => state.quotes.quotes);
