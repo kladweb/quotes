@@ -35,18 +35,16 @@ function PageMain() {
           </>
           :
           (currUser !== 0) ?
-            // <div className='App bg-body-secondary pb-5 text-center'>
-            <Container className='text-center'>
-              <LinkContainer to={'/login'} className='d-inline-block'>
-                <Nav.Link
-                  className='my-5 mx-auto text-center text-info need-login'
-                  eventKey="link-2"
-                >
-                  Сначала нужно залогиниться!
-                </Nav.Link>
-              </LinkContainer>
-            </Container>
-            // </div>
+              <Container className='text-center'>
+                <LinkContainer to={'/login'} className='d-inline-block'>
+                  <Nav.Link
+                    className='my-5 mx-auto text-center text-info need-login'
+                    eventKey="link-2"
+                  >
+                    Сначала нужно залогиниться!
+                  </Nav.Link>
+                </LinkContainer>
+              </Container>
             :
             <Container className='text-center pt-1 mt-4'>
               <div className="mt-4 pt-5">

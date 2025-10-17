@@ -12,8 +12,6 @@ function PageAdminQuotes() {
   };
 
   useEffect(() => {
-    // console.log(idCurrUser);
-    // console.log(adminId.userId);
     if (currUser !== 0 && idCurrUser !== adminId.userId) {
       navigate('/main');
     }
